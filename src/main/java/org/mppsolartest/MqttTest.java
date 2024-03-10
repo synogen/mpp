@@ -21,9 +21,18 @@ public class MqttTest {
 
         mqttClient.setCallback(new MqttHandler(mqttClient));
 
+        // TODO send configuration messages
+        // should be sent
+        // - when the program starts
+        // - when mqtt homeassistant/status reads online
+
+
+        // TODO subscribe to command topic so HA can send commands to inverter?
+
         while (true) {
             try {
-                Thread.sleep(1000);
+                // TODO send status messages
+                Thread.sleep(10000);
             } catch (Exception e) {
                 mqttClient.disconnect();
                 mqttClient.close();

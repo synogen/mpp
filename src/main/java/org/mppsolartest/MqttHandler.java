@@ -11,7 +11,7 @@ public class MqttHandler implements MqttCallback {
 
     public MqttHandler(IMqttAsyncClient client) throws MqttException {
         this.client = client;
-        var statusSub = client.subscribe("testing/status",0);
+        var statusSub = client.subscribe("homeassistant/#",0); // see https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/ for topic syntax
         statusSub.waitForCompletion(5000);
     }
 

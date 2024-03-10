@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64483f24-2305-473e-b8be-3360ff74c3a5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/mqtt.properties.template" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/mppsolartest/MqttHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mppsolartest/MqttHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mppsolartest/MqttHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/mppsolartest/MqttTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mppsolartest/MqttTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +41,7 @@
   "keyToString": {
     "Application.ApiTest.executor": "Run",
     "Application.Main.executor": "Debug",
-    "Application.MqttTest.executor": "Debug",
+    "Application.MqttTest.executor": "Run",
     "Maven.mpp [clean].executor": "Run",
     "Maven.mpp [compile].executor": "Run",
     "Maven.mpp [package].executor": "Run",
@@ -177,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709577336701</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add MQTT test">
+      <option name="closed" value="true" />
+      <created>1709577556106</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709577556106</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -197,7 +204,8 @@
     <MESSAGE value="Add API test" />
     <MESSAGE value="Api properties template" />
     <MESSAGE value="Ignore property files so no sensitive information is checked in" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ignore property files so no sensitive information is checked in" />
+    <MESSAGE value="Add MQTT test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add MQTT test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
