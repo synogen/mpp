@@ -1,0 +1,9 @@
+services:
+  mpp:
+    image: "mpp-test-arm"
+    restart: unless-stopped
+    volumes:
+      - ./serial.properties:/opt/mpp/serial.properties
+      - ./mqtt.properties:/opt/mpp/mqtt.properties
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
