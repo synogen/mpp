@@ -1,4 +1,4 @@
-package org.mppsolartest.communication;
+package org.mppsolartest.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.IOException;

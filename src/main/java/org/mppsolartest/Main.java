@@ -2,8 +2,7 @@ package org.mppsolartest;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.mppsolartest.command.Qpigs;
-import org.mppsolartest.command.Qpiri;
-import org.mppsolartest.communication.SerialHandler;
+import org.mppsolartest.serial.SerialHandler;
 
 import java.util.Scanner;
 

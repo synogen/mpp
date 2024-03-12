@@ -3,4 +3,4 @@ clientId=java_voltronic_test
 username=
 password=
 topicPrefix=homeassistant
-sensorNamePrefix=inverter
+deviceName=PIP5048GEW

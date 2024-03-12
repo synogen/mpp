@@ -1,6 +1,6 @@
 package org.mppsolartest.command;
 
-import org.mppsolartest.communication.SerialHandler;
+import org.mppsolartest.serial.SerialHandler;
 
 public abstract class Command<T> {
 
