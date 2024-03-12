@@ -11,14 +11,14 @@ public class HomeAssistantMqtt {
                 "state_topic": "%s",
                 "unique_id": "%s",
                 "device": {
-                    "name": "%s"
+                    "name": "%s",
                     "identifiers": [
                         "%s"
                     ]
                 },
                 "origin": {
-                    "name": "MQTT Java Test"
-                    "sw_version": "testing"
+                    "name": "MQTT Java Test",
+                    "sw_version": "testing",
                     "support_url": "https://github.com/synogen/mpp"
                 }
             }
@@ -35,8 +35,12 @@ public class HomeAssistantMqtt {
     public static HomeAssistantMqtt forField(Field field, String topicPrefix, String deviceName) {
         var name = field.description();
 
+        // look for unit definition suffix "in <unit>", for example "A" for "Current in A"
         var nameParts = name.split(" ");
         var unit = nameParts.length > 2 && nameParts[nameParts.length-2].equalsIgnoreCase("in")? nameParts[nameParts.length-1] : "";
+        // unit fallbacks
+        if (unit.isEmpty() && name.toLowerCase().contains("voltage")) unit = "V";
+        if (unit.isEmpty() && name.toLowerCase().contains("percent")) unit = "%";
 
         var uniqueId = (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
 
