@@ -9,10 +9,11 @@ import java.util.Map;
 
 public abstract class ArrayResponseCommand extends Command<HashMap<String, Object>> {
 
-    abstract List<Field> getFields();
+    public abstract List<Field> getFields();
     @Override
     public HashMap<String, Object> parseResponse(String response) {
         var result = new HashMap<String, Object>();
+        if (response.length() < 5) return result; //in case of empty or (NAK response
         var rParts = response.substring(1).split(" ");
         for (int i = 0; i < rParts.length; i++) {
             if (getFields().size() > i) {

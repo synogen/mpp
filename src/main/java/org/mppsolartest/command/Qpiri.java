@@ -15,7 +15,7 @@ public class Qpiri extends ArrayResponseCommand {
     }
 
     @Override
-    List<Field> getFields() {
+    public List<Field> getFields() {
         return List.of(
                 new Field<>("Grid rating voltage in V", BigDecimal::new),
                 new Field<>("Grid rating current in A", BigDecimal::new),
@@ -95,7 +95,7 @@ public class Qpiri extends ArrayResponseCommand {
                 new Field<>("PV power balance", s -> mapFrom(s,
                         Map.ofEntries(
                                 entry(0, "PV input max current will be the max charged current"),
-                                entry(1, " PV input max power will be the sum of the max charged power and loads power")
+                                entry(1, "PV input max power will be the sum of the max charged power and loads power")
                         ))
                 ),
                 new Field<>("Max. charging time at C.V stage", Integer::valueOf)

@@ -15,7 +15,7 @@ public class Qpigs extends ArrayResponseCommand {
     }
 
     @Override
-    List<Field> getFields() {
+    public List<Field> getFields() {
         return List.of(
                 new Field<>("AC input voltage in V", BigDecimal::new),
                 new Field<>("AC input frequency in Hz", BigDecimal::new),
@@ -31,7 +31,7 @@ public class Qpigs extends ArrayResponseCommand {
                 new Field<>("Inverter heat sink temperature in C°", Integer::valueOf),
                 new Field<>("PV Input current for battery in A", BigDecimal::new),
                 new Field<>("PV Input voltage", BigDecimal::new),
-                new Field<>("Battery voltage from SCC", BigDecimal::new),
+                new Field<>("Battery voltage from SCC in V", BigDecimal::new),
                 new Field<>("Battery discharge current in A", Integer::valueOf),
                 new Field<>("Status Flags 1", s -> s),
                 new Field<>("Reserved", s -> s),

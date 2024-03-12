@@ -2,3 +2,5 @@ serverUrl=tcp://server:1883
 clientId=java_voltronic_test
 username=
 password=
+topicPrefix=homeassistant
+sensorNamePrefix=inverter
