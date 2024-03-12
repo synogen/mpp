@@ -36,7 +36,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.mppsolartest.ApiTest</mainClass>
+                            <mainClass>org.mppsolartest.MqttTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
