@@ -16,6 +16,10 @@ public class MqttTest {
 
     private static String haStatusTopic = "homeassistant/status";
     public static void main(String[] args) throws Exception {
+        // only for remote debug wait
+//        System.out.println("Press any key to start");
+//        System.in.read();
+
         var mqttConfig = new Properties();
         mqttConfig.load(new FileReader("mqtt.properties"));
         var serialConfig = new Properties();
@@ -83,8 +87,10 @@ public class MqttTest {
                     if (values.keySet().isEmpty()) System.out.println("No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
-                        var haMqtt = mqttEntityList.get(valueKey);
-                        mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(value.toString().getBytes()));
+                        if (mqttEntityList.containsKey(valueKey)) {
+                            var haMqtt = mqttEntityList.get(valueKey);
+                            mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(value.toString().getBytes()));
+                        }
                     }
                 } else {
                     // TODO send unavailable status to availability topic?
