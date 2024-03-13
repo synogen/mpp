@@ -10,6 +10,8 @@ import org.mppsolartest.mqtt.MqttUtil;
 import org.mppsolartest.serial.SerialHandler;
 
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class MqttTest {
@@ -23,7 +25,11 @@ public class MqttTest {
         var mqttConfig = new Properties();
         mqttConfig.load(new FileReader("mqtt.properties"));
         var serialConfig = new Properties();
-        serialConfig.load(new FileReader("serial.properties"));
+        if (Files.exists(Path.of("serial.properties"))) {
+            serialConfig.load(new FileReader("serial.properties"));
+        } else {
+            serialConfig.put("port", "/dev/ttyUSB0");
+        }
 
         var mqttOptions = new MqttConnectionOptions();
         mqttOptions.setUserName(mqttConfig.getProperty("username"));
