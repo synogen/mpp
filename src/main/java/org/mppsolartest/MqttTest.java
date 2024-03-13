@@ -14,12 +14,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import static org.mppsolartest.Log.*;
+
 public class MqttTest {
 
     private static String haStatusTopic = "homeassistant/status";
     public static void main(String[] args) throws Exception {
         // only for remote debug wait
-//        System.out.println("Press any key to start");
+//        Log.log("Press any key to start");
 //        System.in.read();
 
         var mqttConfig = new Properties();
@@ -51,12 +53,12 @@ public class MqttTest {
         mqttSubscriber.setCallback(new MqttCallback() {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("[MQTT] " + topic + ": " + message.toString());
+                log("[MQTT] " + topic + ": " + message.toString());
                 if (topic.equalsIgnoreCase(haStatusTopic)) {
                     if (message.toString().equalsIgnoreCase("online")) {
                         // HA MQTT discovery configurations on HA coming online
                         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
-                        System.out.println("Re-published MQTT discovery configurations for Home Assistant");
+                        log("Re-published MQTT discovery configurations for Home Assistant");
                     }
                 }
             }
@@ -76,7 +78,7 @@ public class MqttTest {
 
         // HA MQTT discovery configurations on program start
         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
-        System.out.println("Published MQTT discovery configurations for Home Assistant");
+        log("Published MQTT discovery configurations for Home Assistant");
 
         // TODO subscribe to command topic so HA can send commands to inverter?
 
@@ -90,7 +92,7 @@ public class MqttTest {
                 if (portOpen) {
                     var serialHandler = new SerialHandler(port);
                     var values = qpigs.run(serialHandler);
-                    if (values.keySet().isEmpty()) System.out.println("No values received from serial port " + port.getSystemPortName() + ", check config!");
+                    if (values.keySet().isEmpty()) log("No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
                         if (mqttEntityList.containsKey(valueKey)) {

@@ -18,7 +18,7 @@ public class ApiTest {
         var port = SerialPort.getCommPort(config.getProperty("port"));
         port.setBaudRate(2400);
         if (port.openPort()) {
-            System.out.println(port.getSystemPortName() + " open");
+            Log.log(port.getSystemPortName() + " open");
             var serialHandler = new SerialHandler(port);
 
             port(80);

@@ -1,6 +1,8 @@
 package org.mppsolartest.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
+import org.mppsolartest.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -115,7 +117,7 @@ public class SerialHandler {
 
                 if (!linebreak) {
                     if (command.indexOf("P") == 0) {
-                        System.out.println("4567890::" + returnValue);
+                        Log.log("4567890::" + returnValue);
                     }
 
                     result = false;
@@ -147,7 +149,7 @@ public class SerialHandler {
         }
 
         if (this.errorcount >= 12) {
-            System.out.println("---------communication exception---------" + this.errorcount);
+            Log.log("---------communication exception---------" + this.errorcount);
         }
 
     }
