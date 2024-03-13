@@ -2,6 +2,10 @@
 Reads data from a Voltronic/MPPSolar inverter and publishes it to MQTT with Home Assistant discovery.
 Right now this is just an incomplete testbed but publishing QPIGS values works.
 
+Tested with a MPPSolar PIP5048GEW and a CH340 USB to serial adapter from Aliexpress.
+
+TODO more logging
+TODO timestamp logs
 
 ## Build
 1. `mvn clean`
