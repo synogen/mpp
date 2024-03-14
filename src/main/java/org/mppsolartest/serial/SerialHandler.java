@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static org.mppsolartest.Log.log;
+
 public class SerialHandler {
     private final InputStream input;
     private final OutputStream output;
@@ -33,6 +35,7 @@ public class SerialHandler {
     }
 
     public synchronized String excuteSimpleCommand(String command) {
+        log("[Serial] Query: " + command);
         boolean result = true;
         String returnValue = "";
 
@@ -77,7 +80,7 @@ public class SerialHandler {
         } finally {
             this.countErrorandNotifyProcesser(result);
         }
-
+        log("[Serial] Response: " + returnValue);
         return returnValue;
     }
 
