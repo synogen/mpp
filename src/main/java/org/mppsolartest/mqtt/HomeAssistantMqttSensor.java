@@ -2,7 +2,7 @@ package org.mppsolartest.mqtt;
 
 import org.mppsolartest.model.Field;
 
-public class HomeAssistantMqtt {
+public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
 
     private String configJson = """
             {
@@ -26,13 +26,15 @@ public class HomeAssistantMqtt {
 
     private String stateTopic;
 
-    private HomeAssistantMqtt(){};
+    private String name;
+    private HomeAssistantMqttSensor(){};
 
-    private HomeAssistantMqtt(String name, String unit, String stateTopic, String uniqueId, String deviceName) {
+    private HomeAssistantMqttSensor(String name, String unit, String stateTopic, String uniqueId, String deviceName) {
         configJson = configJson.formatted(name, unit, stateTopic, uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
         this.stateTopic = stateTopic;
+        this.name = name;
     };
-    public static HomeAssistantMqtt forField(Field field, String topicPrefix, String deviceName) {
+    public static HomeAssistantMqttSensor forField(Field field, String topicPrefix, String deviceName) {
         var name = field.description();
 
         // look for unit definition suffix "in <unit>", for example "A" for "Current in A"
@@ -46,18 +48,26 @@ public class HomeAssistantMqtt {
 
         var state_topic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "sensor/" + uniqueId;
 
-        return new HomeAssistantMqtt(name, unit, state_topic, uniqueId, deviceName);
+        return new HomeAssistantMqttSensor(name, unit, state_topic, uniqueId, deviceName);
     }
 
+    @Override
     public String getConfigJson() {
         return configJson;
     }
 
+    @Override
     public String getStateTopic() {
         return stateTopic;
     }
 
+    @Override
     public String getConfigTopic() {
         return stateTopic + "/config";
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

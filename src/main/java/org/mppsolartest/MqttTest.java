@@ -6,6 +6,7 @@ import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.mppsolartest.command.Qpigs;
+import org.mppsolartest.mqtt.HomeAssistantMqttText;
 import org.mppsolartest.mqtt.MqttUtil;
 import org.mppsolartest.serial.SerialHandler;
 
@@ -26,6 +27,8 @@ public class MqttTest {
 
         var mqttConfig = new Properties();
         mqttConfig.load(new FileReader("mqtt.properties"));
+        var topicPrefix = mqttConfig.getProperty("topicPrefix");
+        var deviceName = mqttConfig.getProperty("deviceName");
         var serialConfig = new Properties();
         if (Files.exists(Path.of("serial.properties"))) {
             serialConfig.load(new FileReader("serial.properties"));
@@ -45,11 +48,24 @@ public class MqttTest {
         mqttSubscriber.connect(mqttOptions);
         mqttPublisher.connect(mqttOptions);
 
+        // open serial port
+        var port = SerialPort.getCommPort(serialConfig.getProperty("port"));
+        port.setBaudRate(2400);
+        var portOpen = port.openPort(500);
+        var serialHandler = new SerialHandler(port);
+
         // get MQTT entities for QPIGS inverter command
         var qpigs = new Qpigs();
         var fields = qpigs.getFields();
-        var mqttEntityList = MqttUtil.getHaMqttEntities(fields, mqttConfig.getProperty("topicPrefix"), mqttConfig.getProperty("deviceName"));
+        var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName);
 
+        // add command MQTT entity for receiving raw commands
+        var commandEntity = new HomeAssistantMqttText("Raw Command Receiver", topicPrefix, deviceName);
+        mqttEntityList.put(commandEntity.getName(), commandEntity);
+
+        // MQTT subscriptions and handling
+        mqttSubscriber.subscribe(haStatusTopic, 0);
+        mqttSubscriber.subscribe(commandEntity.getCommandTopic(), 0);
         mqttSubscriber.setCallback(new MqttCallback() {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -60,6 +76,11 @@ public class MqttTest {
                         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
                         log("Re-published MQTT discovery configurations for Home Assistant");
                     }
+                } else if (topic.equalsIgnoreCase(commandEntity.getCommandTopic())) {
+                    // TODO should this action be defined on the command entity itself so the callback simply checks all command entities and runs their action if the topic matches theirs?
+                    var response = serialHandler.excuteSimpleCommand(message.toString());
+                    if (response.isEmpty()) response = "Empty response received, check serial configuration";
+                    mqttSubscriber.publish(commandEntity.getStateTopic(), new MqttMessage(response.getBytes()));
                 }
             }
 
@@ -74,7 +95,6 @@ public class MqttTest {
             @Override
             public void authPacketArrived(int reasonCode, MqttProperties properties) {}
         });
-        mqttSubscriber.subscribe(haStatusTopic, 0);
 
         // HA MQTT discovery configurations on program start
         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
@@ -82,15 +102,11 @@ public class MqttTest {
 
         // TODO subscribe to command topic so HA can send commands to inverter?
 
-        var port = SerialPort.getCommPort(serialConfig.getProperty("port"));
-        port.setBaudRate(2400);
-        var portOpen = port.openPort(500);
-
+        // serial query loop
         try {
             while (true) {
                 // TODO send status messages
                 if (portOpen) {
-                    var serialHandler = new SerialHandler(port);
                     var values = qpigs.run(serialHandler);
                     if (values.keySet().isEmpty()) log("No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
