@@ -6,7 +6,7 @@ import org.mppsolartest.serial.SerialHandler;
 
 import java.util.Scanner;
 
-public class Main {
+public class CliCommandTest {
     public static void main(String[] args) throws Exception {
         // configure com port
         var ports = SerialPort.getCommPorts();
@@ -34,9 +34,5 @@ public class Main {
             }
             serialHandler.close();
         }
-
-        // TODO implement commands from manual
-        // TODO MQTT publishing/receiving?
-        // TODO or just set it directly with some sort of configuration here instead of using home assistant?
     }
 }

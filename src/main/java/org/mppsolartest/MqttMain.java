@@ -17,7 +17,7 @@ import java.util.Properties;
 
 import static org.mppsolartest.Log.*;
 
-public class MqttTest {
+public class MqttMain {
 
     private static String haStatusTopic = "homeassistant/status";
     public static void main(String[] args) throws Exception {
@@ -74,7 +74,7 @@ public class MqttTest {
                     if (message.toString().equalsIgnoreCase("online")) {
                         // HA MQTT discovery configurations on HA coming online
                         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
-                        log("Re-published MQTT discovery configurations for Home Assistant");
+                        log("[MQTT] Re-published MQTT discovery configurations for Home Assistant");
                     }
                 } else if (topic.equalsIgnoreCase(commandEntity.getCommandTopic())) {
                     // TODO should this action be defined on the command entity itself so the callback simply checks all command entities and runs their action if the topic matches theirs?
@@ -98,17 +98,16 @@ public class MqttTest {
 
         // HA MQTT discovery configurations on program start
         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
-        log("Published MQTT discovery configurations for Home Assistant");
+        log("[MQTT] Published MQTT discovery configurations for Home Assistant");
 
-        // TODO subscribe to command topic so HA can send commands to inverter?
 
         // serial query loop
         try {
             while (true) {
-                // TODO send status messages
+                // get updates from inverter and publish to MQTT
                 if (portOpen) {
                     var values = qpigs.run(serialHandler);
-                    if (values.keySet().isEmpty()) log("No values received from serial port " + port.getSystemPortName() + ", check config!");
+                    if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
                         if (mqttEntityList.containsKey(valueKey)) {
