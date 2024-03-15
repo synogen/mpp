@@ -70,4 +70,9 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String getCommandTopic() {
+        return "";
+    }
 }

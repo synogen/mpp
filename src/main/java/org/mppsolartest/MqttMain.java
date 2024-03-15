@@ -8,6 +8,7 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.mppsolartest.command.Qdop;
 import org.mppsolartest.command.Qpigs;
 import org.mppsolartest.command.Qpiri;
+import org.mppsolartest.command.WriteCommandHandlers;
 import org.mppsolartest.model.Field;
 import org.mppsolartest.mqtt.HomeAssistantMqttText;
 import org.mppsolartest.mqtt.MqttUtil;
@@ -58,7 +59,7 @@ public class MqttMain {
         var portOpen = port.openPort(500);
         var serialHandler = new SerialHandler(port);
 
-        // get MQTT entities for QPIGS inverter command
+        // get MQTT entities for inverter commands
         var qpigs = new Qpigs();
         var qpiri = new Qpiri();
         var qdop = new Qdop();
@@ -71,7 +72,11 @@ public class MqttMain {
 
         // add command MQTT entity for receiving raw commands
         var commandEntity = new HomeAssistantMqttText("Raw Command Receiver", topicPrefix, deviceName);
+        commandEntity.setCommandHandler(WriteCommandHandlers::rawCommandHandler);
         mqttEntityList.put(commandEntity.getName(), commandEntity);
+
+        // TODO add command handlers for setting battery back to grid/discharge/cut-off
+
 
         // MQTT subscriptions and handling
         mqttSubscriber.subscribe(haStatusTopic, 0);
@@ -86,13 +91,14 @@ public class MqttMain {
                         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
                         log("[MQTT] Re-published MQTT discovery configurations for Home Assistant");
                     }
-                } else if (topic.equalsIgnoreCase(commandEntity.getCommandTopic())) {
-                    // TODO should this action be defined on the command entity itself so the callback simply checks all command entities and runs their action if the topic matches theirs?
-                    var response = serialHandler.excuteSimpleCommand(message.toString());
-                    if (response.isEmpty()) response = "Empty response received, check serial configuration";
-                    mqttSubscriber.publish(commandEntity.getStateTopic(), new MqttMessage(response.getBytes()));
+                } else {
+                    // every MQTT entity with a command topic has to be checked and acted upon here
+                    for (var mqttEntity: mqttEntityList.values()) {
+                        if (!mqttEntity.getCommandTopic().isEmpty() && topic.equalsIgnoreCase(mqttEntity.getCommandTopic())) {
+                            mqttEntity.getCommandHandler().apply(message.toString(), serialHandler, mqttPublisher, mqttEntity);
+                        }
+                    }
                 }
-                // TODO every MQTT entity with a command topic has to be checked and acted upon here
             }
 
             @Override
