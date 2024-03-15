@@ -7,7 +7,7 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
     private String configJson = """
             {
                 "name": "%s",
-                "unit_of_measurement": "%s",
+                %s
                 "state_topic": "%s",
                 "unique_id": "%s",
                 "device": {
@@ -30,7 +30,7 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
     private HomeAssistantMqttSensor(){};
 
     private HomeAssistantMqttSensor(String name, String unit, String stateTopic, String uniqueId, String deviceName) {
-        configJson = configJson.formatted(name, unit, stateTopic, uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
+        configJson = configJson.formatted(name, !unit.isBlank()? "\"unit_of_measurement\": \"" + unit + "\"," : "", stateTopic, uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
         this.stateTopic = stateTopic;
         this.name = name;
     };

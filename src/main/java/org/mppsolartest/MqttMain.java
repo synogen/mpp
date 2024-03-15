@@ -6,6 +6,8 @@ import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.mppsolartest.command.Qpigs;
+import org.mppsolartest.command.Qpiri;
+import org.mppsolartest.model.Field;
 import org.mppsolartest.mqtt.HomeAssistantMqttText;
 import org.mppsolartest.mqtt.MqttUtil;
 import org.mppsolartest.serial.SerialHandler;
@@ -13,6 +15,7 @@ import org.mppsolartest.serial.SerialHandler;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.mppsolartest.Log.*;
@@ -56,7 +59,11 @@ public class MqttMain {
 
         // get MQTT entities for QPIGS inverter command
         var qpigs = new Qpigs();
-        var fields = qpigs.getFields();
+        var qpiri = new Qpiri();
+
+        var fields = new ArrayList<Field>();
+        fields.addAll(qpigs.getFields());
+        fields.addAll(qpiri.getFields());
         var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName);
 
         // add command MQTT entity for receiving raw commands
@@ -107,6 +114,7 @@ public class MqttMain {
                 // get updates from inverter and publish to MQTT
                 if (portOpen) {
                     var values = qpigs.run(serialHandler);
+                    values.putAll(qpiri.run(serialHandler));
                     if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
@@ -115,6 +123,7 @@ public class MqttMain {
                             mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(value.toString().getBytes()));
                         }
                     }
+                    log("[MQTT] Published updates from inverter to MQTT");
                 } else {
                     // TODO send unavailable status to availability topic?
                 }
