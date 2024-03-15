@@ -1,6 +1,6 @@
 package org.mppsolartest.mqtt;
 
-public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
+public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
 
     private String configJson = """
             {
@@ -8,6 +8,8 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
                 "state_topic": "%s",
                 "command_topic": "%s",
                 "unique_id": "%s",
+                "min": 0,
+                "max": 100,
                 "device": {
                     "name": "%s",
                     "identifiers": [
@@ -25,12 +27,12 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
     private String stateTopic;
     private String name;
 
-    private HomeAssistantMqttText(){};
+    private HomeAssistantMqttNumber(){};
 
-    public HomeAssistantMqttText(String name, String topicPrefix, String deviceName) {
+    public HomeAssistantMqttNumber(String name, String topicPrefix, String deviceName) {
         var uniqueId = (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
 
-        this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "text/" + uniqueId;
+        this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "number/" + uniqueId;
         this.name = name;
 
         configJson = configJson.formatted(name, stateTopic, getCommandTopic(), uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));

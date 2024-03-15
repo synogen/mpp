@@ -1,11 +1,11 @@
 package org.mppsolartest.mqtt;
 
 public abstract class HomeAssistantMqttEntityBase {
-    public abstract String getConfigJson();
+    abstract public String getConfigJson();
 
-    public abstract String getStateTopic();
+    abstract public String getStateTopic();
 
-    public abstract String getConfigTopic();
+    abstract public String getConfigTopic();
 
-    public abstract String getName();
+    abstract public String getName();
 }

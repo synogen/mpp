@@ -13,7 +13,11 @@ public class MqttUtil {
     public static HashMap<String, HomeAssistantMqttEntityBase> getHaMqttEntities(List<Field> fields, String topicPrefix, String deviceName) {
         var mqttEntityList = new HashMap<String, HomeAssistantMqttEntityBase>();
         for (var field: fields) {
-            var haMqtt = HomeAssistantMqttSensor.forField(field, topicPrefix, deviceName);
+            var haMqtt = switch (field.haType()) {
+                case TEXT: yield new HomeAssistantMqttText(field.description(), topicPrefix, deviceName);
+                case NUMBER: yield new HomeAssistantMqttNumber(field.description(), topicPrefix, deviceName);
+                default: yield HomeAssistantMqttSensor.forField(field, topicPrefix, deviceName);
+            };
             mqttEntityList.put(field.description(), haMqtt);
         }
         return mqttEntityList;

@@ -5,6 +5,7 @@ import org.eclipse.paho.mqttv5.client.*;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
+import org.mppsolartest.command.Qdop;
 import org.mppsolartest.command.Qpigs;
 import org.mppsolartest.command.Qpiri;
 import org.mppsolartest.model.Field;
@@ -60,10 +61,12 @@ public class MqttMain {
         // get MQTT entities for QPIGS inverter command
         var qpigs = new Qpigs();
         var qpiri = new Qpiri();
+        var qdop = new Qdop();
 
         var fields = new ArrayList<Field>();
         fields.addAll(qpigs.getFields());
         fields.addAll(qpiri.getFields());
+        fields.addAll(qdop.getFields());
         var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName);
 
         // add command MQTT entity for receiving raw commands
@@ -89,6 +92,7 @@ public class MqttMain {
                     if (response.isEmpty()) response = "Empty response received, check serial configuration";
                     mqttSubscriber.publish(commandEntity.getStateTopic(), new MqttMessage(response.getBytes()));
                 }
+                // TODO every MQTT entity with a command topic has to be checked and acted upon here
             }
 
             @Override
@@ -115,6 +119,7 @@ public class MqttMain {
                 if (portOpen) {
                     var values = qpigs.run(serialHandler);
                     values.putAll(qpiri.run(serialHandler));
+                    values.putAll(qdop.run(serialHandler));
                     if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + port.getSystemPortName() + ", check config!");
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
