@@ -7,3 +7,6 @@ services:
       - ./mqtt.properties:/opt/mpp/mqtt.properties
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
+    # Java debug only
+    #ports:
+    #  - 5005:5005
