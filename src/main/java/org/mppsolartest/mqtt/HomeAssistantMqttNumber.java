@@ -8,8 +8,10 @@ public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
                 "state_topic": "%s",
                 "command_topic": "%s",
                 "unique_id": "%s",
+                %s
                 "min": 0,
                 "max": 100,
+                "mode": "box",
                 "device": {
                     "name": "%s",
                     "identifiers": [
@@ -31,11 +33,11 @@ public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
 
     public HomeAssistantMqttNumber(String name, String topicPrefix, String deviceName) {
         var uniqueId = (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
-
+        var unit = name.toLowerCase().contains("capacity")? "\"unit_of_measurement\": \"%\"," : "";
         this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "number/" + uniqueId;
         this.name = name;
 
-        configJson = configJson.formatted(name, stateTopic, getCommandTopic(), uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
+        configJson = configJson.formatted(name, stateTopic, getCommandTopic(), uniqueId, unit, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
     };
 
     public String getConfigJson() {

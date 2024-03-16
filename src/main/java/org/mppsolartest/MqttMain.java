@@ -75,12 +75,17 @@ public class MqttMain {
         commandEntity.setCommandHandler(WriteCommandHandlers::rawCommandHandler);
         mqttEntityList.put(commandEntity.getName(), commandEntity);
 
-        // TODO add command handlers for setting battery back to grid/discharge/cut-off
-
+        // add command handlers for setting battery back to grid/discharge/cut-off
+        mqttEntityList.get(qdop.getFields().get(8).description()).setCommandHandler(WriteCommandHandlers::pbccCommandHandler);
+        mqttEntityList.get(qdop.getFields().get(9).description()).setCommandHandler(WriteCommandHandlers::pbdcCommandHandler);
+        mqttEntityList.get(qdop.getFields().get(10).description()).setCommandHandler(WriteCommandHandlers::psdcCommandHandler);
 
         // MQTT subscriptions and handling
         mqttSubscriber.subscribe(haStatusTopic, 0);
-        mqttSubscriber.subscribe(commandEntity.getCommandTopic(), 0);
+        for (var mqttEntity: mqttEntityList.values()) {
+            if (!mqttEntity.getCommandTopic().isEmpty()) mqttSubscriber.subscribe(mqttEntity.getCommandTopic(), 0);
+        }
+
         mqttSubscriber.setCallback(new MqttCallback() {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
