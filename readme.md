@@ -1,8 +1,9 @@
 ## General
 Reads data from a Voltronic/MPPSolar inverter and publishes it to MQTT with Home Assistant discovery.
 Right now this is just an incomplete testbed but the following works:
-- publishing QPIGS values
+- publishing QPIGS, QPIRI and QDOP values
 - raw command receiver
+- setting battery trigger capacities via PBCC, PBDC and PSDC
 
 Tested with a MPPSolar PIP5048GEW, an OrangePi Zero 2W and a CH340 USB to serial adapter from Aliexpress.
 
