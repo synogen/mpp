@@ -30,10 +30,14 @@ public class SerialHandler {
         this.serialPort = serialPort;
         this.serialPort.setComPortParameters(2400, 8, 1, 0);
         this.serialPort.setComPortTimeouts(1, 1200, 0);
+        this.serialPort.openPort(500);
         this.input = serialPort.getInputStream();
         this.output = serialPort.getOutputStream();
     }
 
+    public boolean isOpen() {
+        return this.serialPort.isOpen();
+    }
     public synchronized String excuteSimpleCommand(String command) {
         log("[Serial] Query: " + command);
         boolean result = true;
@@ -175,5 +179,9 @@ public class SerialHandler {
                 this.serialPort.closePort();
             } catch (Exception ignored) {}
         }
+    }
+
+    public String getSystemPortName() {
+        return this.serialPort.getSystemPortName();
     }
 }
