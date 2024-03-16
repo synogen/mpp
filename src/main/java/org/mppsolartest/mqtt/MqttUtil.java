@@ -16,9 +16,11 @@ public class MqttUtil {
             var haMqtt = switch (field.haType()) {
                 case TEXT: yield new HomeAssistantMqttText(field.description(), topicPrefix, deviceName);
                 case NUMBER: yield new HomeAssistantMqttNumber(field.description(), topicPrefix, deviceName);
+                case BINARY: yield new HomeAssistantMqttBinary(field.description(), topicPrefix, deviceName);
+                case MULTIFLAG: mqttEntityList.putAll(getHaMqttEntities(field.subfields(), topicPrefix, deviceName)); yield null;
                 default: yield HomeAssistantMqttSensor.forField(field, topicPrefix, deviceName);
             };
-            mqttEntityList.put(field.description(), haMqtt);
+            if (haMqtt != null) mqttEntityList.put(field.description(), haMqtt);
         }
         return mqttEntityList;
     }

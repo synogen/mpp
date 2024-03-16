@@ -1,12 +1,10 @@
 package org.mppsolartest.command;
 
 import org.mppsolartest.model.Field;
+import org.mppsolartest.mqtt.HAType;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-
-import static java.util.Map.entry;
 
 public class Qpigs extends ArrayResponseCommand {
     @Override
@@ -33,7 +31,16 @@ public class Qpigs extends ArrayResponseCommand {
                 new Field<>("PV Input voltage", BigDecimal::new),
                 new Field<>("Battery voltage from SCC in V", BigDecimal::new),
                 new Field<>("Battery discharge current in A", Integer::valueOf),
-                new Field<>("Status Flags 1", s -> s),
+                new Field<>("Status Flags 1", List.of(
+                        new Field<>("PV or AC feed the load", this::toOnOff, HAType.BINARY),
+                        new Field<>("Configuration change", this::toOnOff, HAType.BINARY),
+                        new Field<>("SCC firmware version updated", this::toOnOff, HAType.BINARY),
+                        new Field<>("Load on", this::toOnOff, HAType.BINARY),
+                        new Field<>("Status Flags 1 Unknown flag 5", this::toOnOff, HAType.BINARY),
+                        new Field<>("Charging on", this::toOnOff, HAType.BINARY),
+                        new Field<>("Solar Charging on", this::toOnOff, HAType.BINARY),
+                        new Field<>("AC Charging on", this::toOnOff, HAType.BINARY)
+                )),
                 new Field<>("Reserved", s -> s),
                 new Field<>("Reserved 2", s -> s),
                 new Field<>("PV Charging power in W", Integer::valueOf),
