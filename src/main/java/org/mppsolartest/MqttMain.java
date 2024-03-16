@@ -1,5 +1,6 @@
 package org.mppsolartest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fazecast.jSerialComm.SerialPort;
 import org.eclipse.paho.mqttv5.client.*;
 import org.eclipse.paho.mqttv5.common.MqttException;
@@ -94,11 +95,13 @@ public class MqttMain {
                     values.putAll(qdop.run(serialHandler));
                     if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + serialHandler.getSystemPortName() + ", check config!");
                     // match values against corresponding MQTT entities and publish to MQTT
+                    var jsonMapper = new ObjectMapper();
                     for (var valueKey: values.keySet()) {
                         var value = values.get(valueKey);
                         if (mqttEntityList.containsKey(valueKey)) {
                             var haMqtt = mqttEntityList.get(valueKey);
-                            mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(value.toString().getBytes()));
+                            var valueString = value.getClass().isRecord()? jsonMapper.writeValueAsString(value) : value.toString();
+                            mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(valueString.getBytes()));
                         }
                     }
                     log("[MQTT] Published updates from inverter to MQTT");
