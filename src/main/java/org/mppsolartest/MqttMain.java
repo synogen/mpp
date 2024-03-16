@@ -62,8 +62,9 @@ public class MqttMain {
         var qpigs = new Qpigs();
         var qpiri = new Qpiri();
         var qdop = new Qdop();
+        var qmod = new Qmod();
 
-        var fields = queryFields(qpigs, qpiri, qdop);
+        var fields = queryFields(qpigs, qpiri, qdop, qmod);
         var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName);
 
         // add command MQTT entity for receiving raw commands
@@ -93,6 +94,7 @@ public class MqttMain {
                     var values = qpigs.run(serialHandler);
                     values.putAll(qpiri.run(serialHandler));
                     values.putAll(qdop.run(serialHandler));
+                    values.putAll(qmod.run(serialHandler));
                     if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + serialHandler.getSystemPortName() + ", check config!");
                     // match values against corresponding MQTT entities and publish to MQTT
                     var jsonMapper = new ObjectMapper();

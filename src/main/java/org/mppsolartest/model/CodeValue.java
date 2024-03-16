@@ -1,4 +1,4 @@
 package org.mppsolartest.model;
 
-public record CodeValue(Integer value, String meaning) {
+public record CodeValue(String value, String meaning) {
 }

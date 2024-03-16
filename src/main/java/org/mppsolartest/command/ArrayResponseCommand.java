@@ -14,7 +14,7 @@ public abstract class ArrayResponseCommand extends Command<HashMap<String, Objec
     @Override
     public HashMap<String, Object> parseResponse(String response) {
         var result = new HashMap<String, Object>();
-        if (response.length() < 5) return result; //in case of empty or (NAK response
+        if (response.isEmpty() || response.equalsIgnoreCase("(NAK")) return result; //in case of empty or (NAK response
         var rParts = response.substring(1).split(" ");
         for (int i = 0; i < rParts.length; i++) {
             if (getFields().size() > i) {
@@ -40,12 +40,20 @@ public abstract class ArrayResponseCommand extends Command<HashMap<String, Objec
         return result;
     }
 
-    protected CodeValue mapFrom(String value, Map<Integer, String> map) {
-        var code = Integer.valueOf(value);
-        if (map.containsKey(code)) {
-            return new CodeValue(code, map.get(code));
+    protected CodeValue mapStringCodes(String value, Map<String, String> map) {
+        if (map.containsKey(value)) {
+            return new CodeValue(value, map.get(value));
         } else {
-            return new CodeValue(code, "Unknown (" + code + ")");
+            return new CodeValue(value, "Unknown (" + value + ")");
+        }
+    }
+
+    protected CodeValue mapIntCodes(String value, Map<Integer, String> map) {
+        var key = Integer.parseInt(value);
+        if (map.containsKey(key)) {
+            return new CodeValue(value, map.get(key));
+        } else {
+            return new CodeValue(value, "Unknown (" + value + ")");
         }
     }
 
