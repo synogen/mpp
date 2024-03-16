@@ -41,3 +41,4 @@ build/
 *.properties
 /java_voltronic*
 *.tar
+*.gz
