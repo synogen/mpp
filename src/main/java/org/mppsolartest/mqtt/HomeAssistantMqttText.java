@@ -2,25 +2,7 @@ package org.mppsolartest.mqtt;
 
 public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
 
-    private String configJson = """
-            {
-                "name": "%s",
-                "state_topic": "%s",
-                "command_topic": "%s",
-                "unique_id": "%s",
-                "device": {
-                    "name": "%s",
-                    "identifiers": [
-                        "%s"
-                    ]
-                },
-                "origin": {
-                    "name": "MQTT Java Test",
-                    "sw_version": "testing",
-                    "support_url": "https://github.com/synogen/mpp"
-                }
-            }
-            """;
+    private ConfigJson configJson = new ConfigJson();
 
     private String stateTopic;
     private String name;
@@ -33,10 +15,15 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
         this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "text/" + uniqueId;
         this.name = name;
 
-        configJson = configJson.formatted(name, stateTopic, getCommandTopic(), uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
+        configJson.baseConfig(this.name, stateTopic, uniqueId, deviceName);
     };
 
     public String getConfigJson() {
+        return configJson.getJson();
+    }
+
+    @Override
+    public ConfigJson getConfig() {
         return configJson;
     }
 
@@ -51,9 +38,5 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
     @Override
     public String getName() {
         return name;
-    }
-
-    public String getCommandTopic() {
-        return stateTopic + "/set";
     }
 }

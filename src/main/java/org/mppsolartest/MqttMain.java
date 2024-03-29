@@ -8,6 +8,7 @@ import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.mppsolartest.command.*;
 import org.mppsolartest.model.Field;
+import org.mppsolartest.mqtt.ConfigJson;
 import org.mppsolartest.mqtt.HomeAssistantMqttEntityBase;
 import org.mppsolartest.mqtt.HomeAssistantMqttText;
 import org.mppsolartest.mqtt.MqttUtil;
@@ -73,9 +74,20 @@ public class MqttMain {
         mqttEntityList.put(commandEntity.getName(), commandEntity);
 
         // add command handlers for setting battery back to grid/discharge/cut-off
-        mqttEntityList.get(qdop.getFields().get(8).description()).setCommandHandler(WriteCommandHandlers::pbccCommandHandler);
-        mqttEntityList.get(qdop.getFields().get(9).description()).setCommandHandler(WriteCommandHandlers::pbdcCommandHandler);
-        mqttEntityList.get(qdop.getFields().get(10).description()).setCommandHandler(WriteCommandHandlers::psdcCommandHandler);
+        var mqttEntity = mqttEntityList.get(qdop.getFields().get(8).description());
+        mqttEntity.setCommandHandler(WriteCommandHandlers::pbccCommandHandler);
+        commandablePercentageConfig(mqttEntity.getConfig());
+
+        mqttEntity = mqttEntityList.get(qdop.getFields().get(9).description());
+        mqttEntity.setCommandHandler(WriteCommandHandlers::pbdcCommandHandler);
+        commandablePercentageConfig(mqttEntity.getConfig());
+
+        mqttEntity = mqttEntityList.get(qdop.getFields().get(10).description());
+        mqttEntity.setCommandHandler(WriteCommandHandlers::psdcCommandHandler);
+        commandablePercentageConfig(mqttEntity.getConfig());
+
+//        mqttEntityList.get("Output source priority").setCommandHandler(WriteCommandHandlers::popCommandHandler);
+//        mqttEntityList.get("Charger source priority").setCommandHandler(WriteCommandHandlers::pcpCommandHandler);
 
         // MQTT subscriptions and handling
         mqqtSubscriptions(mqttSubscriber, mqttPublisher, mqttEntityList, serialHandler);
@@ -122,6 +134,12 @@ public class MqttMain {
             mqttSubscriber.close();
             serialHandler.close();
         }
+    }
+
+    private static void commandablePercentageConfig(ConfigJson config) {
+        config.min(0);
+        config.max(100);
+        config.mode("box");
     }
 
     private static ArrayList<Field> queryFields(ArrayResponseCommand ...commands) {

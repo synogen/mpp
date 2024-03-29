@@ -4,33 +4,16 @@ import org.mppsolartest.model.Field;
 
 public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
 
-    private String configJson = """
-            {
-                "name": "%s",
-                %s
-                "state_topic": "%s",
-                "unique_id": "%s",
-                "device": {
-                    "name": "%s",
-                    "identifiers": [
-                        "%s"
-                    ]
-                },
-                "origin": {
-                    "name": "MQTT Java Test",
-                    "sw_version": "testing",
-                    "support_url": "https://github.com/synogen/mpp"
-                }
-            }
-            """;
-
+    private ConfigJson configJson = new ConfigJson();
     private String stateTopic;
 
     private String name;
     private HomeAssistantMqttSensor(){};
 
     private HomeAssistantMqttSensor(String name, String unit, String stateTopic, String uniqueId, String deviceName) {
-        configJson = configJson.formatted(name, !unit.isBlank()? "\"unit_of_measurement\": \"" + unit + "\"," : "", stateTopic, uniqueId, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
+        configJson.baseConfig(name, stateTopic, uniqueId, deviceName);
+        if (!unit.isBlank()) configJson.unit(unit);
+
         this.stateTopic = stateTopic;
         this.name = name;
     };
@@ -53,6 +36,11 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
 
     @Override
     public String getConfigJson() {
+        return configJson.getJson();
+    }
+
+    @Override
+    public ConfigJson getConfig() {
         return configJson;
     }
 
@@ -69,10 +57,5 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String getCommandTopic() {
-        return "";
     }
 }

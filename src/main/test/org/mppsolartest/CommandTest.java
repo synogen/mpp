@@ -2,6 +2,7 @@ package org.mppsolartest;
 
 import org.mppsolartest.command.Qpiri;
 import org.mppsolartest.model.Field;
+import org.mppsolartest.mqtt.HomeAssistantMqttText;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,8 @@ public class CommandTest {
         var test = new Qpiri().parseResponse(qpiriExample);
 
         var f = new Field<>("AC input voltage in V", BigDecimal::new);
+
+        System.out.println(new HomeAssistantMqttText("name", "hatest", "gew5048").getConfigJson());
 
         System.out.println("Test");
 

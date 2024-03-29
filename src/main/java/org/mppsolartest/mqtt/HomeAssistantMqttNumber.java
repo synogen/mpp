@@ -2,29 +2,7 @@ package org.mppsolartest.mqtt;
 
 public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
 
-    private String configJson = """
-            {
-                "name": "%s",
-                "state_topic": "%s",
-                "command_topic": "%s",
-                "unique_id": "%s",
-                %s
-                "min": 0,
-                "max": 100,
-                "mode": "box",
-                "device": {
-                    "name": "%s",
-                    "identifiers": [
-                        "%s"
-                    ]
-                },
-                "origin": {
-                    "name": "MQTT Java Test",
-                    "sw_version": "testing",
-                    "support_url": "https://github.com/synogen/mpp"
-                }
-            }
-            """;
+    private ConfigJson configJson = new ConfigJson();
 
     private String stateTopic;
     private String name;
@@ -33,14 +11,19 @@ public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
 
     public HomeAssistantMqttNumber(String name, String topicPrefix, String deviceName) {
         var uniqueId = (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
-        var unit = name.toLowerCase().contains("capacity")? "\"unit_of_measurement\": \"%\"," : "";
         this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "number/" + uniqueId;
         this.name = name;
 
-        configJson = configJson.formatted(name, stateTopic, getCommandTopic(), uniqueId, unit, deviceName, deviceName.toLowerCase().replaceAll(" ", "_"));
+        configJson.baseConfig(name, stateTopic, uniqueId, deviceName);
+        if (name.toLowerCase().contains("capacity")) configJson.unit("%");
     };
-
+    @Override
     public String getConfigJson() {
+        return configJson.getJson();
+    }
+
+    @Override
+    public ConfigJson getConfig() {
         return configJson;
     }
 
@@ -55,9 +38,5 @@ public class HomeAssistantMqttNumber extends HomeAssistantMqttEntityBase {
     @Override
     public String getName() {
         return name;
-    }
-
-    public String getCommandTopic() {
-        return stateTopic + "/set";
     }
 }

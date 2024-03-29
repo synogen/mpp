@@ -15,20 +15,28 @@ public class WriteCommandHandlers {
     }
 
     public static void pbccCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-        setNumberCommand("PBCC", message, serialHandler, mqttClient, mqttEntity);
+        setNumberCommand("PBCC", 3, message, serialHandler, mqttClient, mqttEntity);
     }
 
     public static void pbdcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-        setNumberCommand("PBDC", message, serialHandler, mqttClient, mqttEntity);
+        setNumberCommand("PBDC",3, message, serialHandler, mqttClient, mqttEntity);
     }
 
     public static void psdcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-        setNumberCommand("PSDC", message, serialHandler, mqttClient, mqttEntity);
+        setNumberCommand("PSDC", 3, message, serialHandler, mqttClient, mqttEntity);
     }
 
-    private static void setNumberCommand(String command, String value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
+    public static void pcpCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommand("PCP", 2, message, serialHandler, mqttClient, mqttEntity);
+    }
+
+    public static void popCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommand("POP", 2, message, serialHandler, mqttClient, mqttEntity);
+    }
+
+    private static void setNumberCommand(String command, Integer numberPaddedLength, String value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
         var capacity = Integer.parseInt(value);
-        var capacityString = String.format("%03d", capacity);
+        var capacityString = String.format("%0" + numberPaddedLength + "d", capacity);
         var response = serialHandler.excuteSimpleCommand(command + capacityString);
         if (response.equalsIgnoreCase("(ACK")) mqttClient.publish(mqttEntity.getStateTopic(), new MqttMessage(capacityString.getBytes()));
         if (response.isEmpty()) Log.log("[Serial] Empty response received, check serial configuration");
