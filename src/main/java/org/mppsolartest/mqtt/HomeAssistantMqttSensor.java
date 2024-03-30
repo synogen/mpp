@@ -5,8 +5,6 @@ import org.mppsolartest.model.Field;
 public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
 
     private ConfigJson configJson = new ConfigJson();
-    private String stateTopic;
-
     private String name;
     private HomeAssistantMqttSensor(){};
 
@@ -14,7 +12,7 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
         configJson.baseConfig(name, stateTopic, uniqueId, deviceName);
         if (!unit.isBlank()) configJson.unit(unit);
 
-        this.stateTopic = stateTopic;
+        this.setStateTopic(stateTopic);
         this.name = name;
     };
     public static HomeAssistantMqttSensor forField(Field field, String topicPrefix, String deviceName) {
@@ -42,16 +40,6 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
     @Override
     public ConfigJson getConfig() {
         return configJson;
-    }
-
-    @Override
-    public String getStateTopic() {
-        return stateTopic;
-    }
-
-    @Override
-    public String getConfigTopic() {
-        return stateTopic + "/config";
     }
 
     @Override

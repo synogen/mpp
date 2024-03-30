@@ -8,9 +8,19 @@ public abstract class HomeAssistantMqttEntityBase {
 
     abstract public ConfigJson getConfig();
 
-    abstract public String getStateTopic();
+    private String stateTopic;
 
-    abstract public String getConfigTopic();
+    public String getStateTopic() {
+        return stateTopic;
+    }
+
+    public void setStateTopic(String stateTopic) {
+        this.stateTopic = stateTopic;
+    }
+
+    public String getConfigTopic() {
+        return stateTopic + "/config";
+    }
 
     abstract public String getName();
     public String getCommandTopic() {

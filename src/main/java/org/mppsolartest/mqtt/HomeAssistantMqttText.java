@@ -4,7 +4,6 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
 
     private ConfigJson configJson = new ConfigJson();
 
-    private String stateTopic;
     private String name;
 
     private HomeAssistantMqttText(){};
@@ -12,10 +11,10 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
     public HomeAssistantMqttText(String name, String topicPrefix, String deviceName) {
         var uniqueId = (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
 
-        this.stateTopic = (topicPrefix.length() > 0? topicPrefix + "/" : "") + "text/" + uniqueId;
+        this.setStateTopic((topicPrefix.length() > 0 ? topicPrefix + "/" : "") + "text/" + uniqueId);
         this.name = name;
 
-        configJson.baseConfig(this.name, stateTopic, uniqueId, deviceName);
+        configJson.baseConfig(this.name, getStateTopic(), uniqueId, deviceName);
     };
 
     public String getConfigJson() {
@@ -25,14 +24,6 @@ public class HomeAssistantMqttText extends HomeAssistantMqttEntityBase {
     @Override
     public ConfigJson getConfig() {
         return configJson;
-    }
-
-    public String getStateTopic() {
-        return stateTopic;
-    }
-
-    public String getConfigTopic() {
-        return stateTopic + "/config";
     }
 
     @Override
