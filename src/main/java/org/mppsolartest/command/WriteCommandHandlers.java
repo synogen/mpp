@@ -38,21 +38,28 @@ public class WriteCommandHandlers {
         var options = mqttEntity.getOptions();
         for (var code: options.keySet()) {
             if (message.equalsIgnoreCase(options.get(code))) {
-                setNumberCommand(command, 2, code, serialHandler, mqttClient, mqttEntity);
+                if (runSetNumberCommand(command, 2, code, serialHandler, mqttClient, mqttEntity))
+                    // tell HA that the value was set successfully by publishing an update to the MQTT entities state
+                    mqttClient.publish(mqttEntity.getStateTopic(), new MqttMessage(message.getBytes()));
+                break;
             }
         }
     }
 
     private static void setNumberCommand(String command, Integer numberPaddedLength, String value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
         var intValue = Integer.parseInt(value);
-        setNumberCommand(command, numberPaddedLength, intValue, serialHandler, mqttClient, mqttEntity);
+        if (runSetNumberCommand(command, numberPaddedLength, intValue, serialHandler, mqttClient, mqttEntity))
+            // tell HA that the value was set successfully by publishing an update to the MQTT entities state
+            mqttClient.publish(mqttEntity.getStateTopic(), new MqttMessage(value.getBytes()));
     }
 
-    private static void setNumberCommand(String command, Integer numberPaddedLength, Integer value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
-        var capacityString = String.format("%0" + numberPaddedLength + "d", value);
-        var response = serialHandler.excuteSimpleCommand(command + capacityString);
-        if (response.equalsIgnoreCase("(ACK")) mqttClient.publish(mqttEntity.getStateTopic(), new MqttMessage(capacityString.getBytes()));
+    private static boolean runSetNumberCommand(String command, Integer numberPaddedLength, Integer value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
+        var success = false;
+        var valueString = String.format("%0" + numberPaddedLength + "d", value);
+        var response = serialHandler.excuteSimpleCommand(command + valueString);
+        success = response.equalsIgnoreCase("(ACK");
         if (response.isEmpty()) Log.log("[Serial] Empty response received, check serial configuration");
-        if (response.equalsIgnoreCase("(NAK")) Log.log("[Serial] Inverter denied command " + command + capacityString);
+        if (response.equalsIgnoreCase("(NAK")) Log.log("[Serial] Inverter denied command " + command + valueString);
+        return success;
     }
 }
