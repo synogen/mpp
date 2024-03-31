@@ -4,7 +4,7 @@ Right now this is just an incomplete testbed but the following works:
 - publishing QPIGS, QPIRI, QDOP and QMOD values
 - raw command receiver
 - setting battery trigger capacities via PBCC, PBDC and PSDC
-- 
+
 See https://github.com/jblance/mpp-solar/tree/master/docs/protocols for different Voltronic protocols and commands
 
 Tested with a MPPSolar PIP5048GEW, an OrangePi Zero 2W and a CH340 USB to serial adapter from Aliexpress.
@@ -34,5 +34,4 @@ Requirements:
 HA should then automatically pick up the different published entities through its MQTT integration.
 
 ## TODO
-- more logging
 - implement commands from inverter protocol manual
