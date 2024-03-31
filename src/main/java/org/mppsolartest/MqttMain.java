@@ -87,7 +87,7 @@ public class MqttMain {
         commandablePercentageConfig(mqttEntity.getConfig());
 
 //        mqttEntityList.get("Output source priority").setCommandHandler(WriteCommandHandlers::popCommandHandler);
-//        mqttEntityList.get("Charger source priority").setCommandHandler(WriteCommandHandlers::pcpCommandHandler);
+        mqttEntityList.get("Charger source priority").setCommandHandler(WriteCommandHandlers::pcpCommandHandler);
 
         // MQTT subscriptions and handling
         mqqtSubscriptions(mqttSubscriber, mqttPublisher, mqttEntityList, serialHandler);

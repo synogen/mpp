@@ -1,6 +1,7 @@
 package org.mppsolartest.mqtt;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,10 @@ public class ConfigJson {
 
     public void mode(String mode) {
         simpleString("mode", mode);
+    }
+
+    public void options(Collection<String> options) {
+        entries.add("\"%s\": %s".formatted("options", "[\"" + options.stream().collect(Collectors.joining("\",\"")) + "\"]"));
     }
 
     public void baseConfig(String name, String stateTopic, String uniqueId, String device) {

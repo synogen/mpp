@@ -14,6 +14,13 @@ public class Qpiri extends ArrayResponseCommand {
         return "QPIRI";
     }
 
+    private final Map<Integer, String> chargerPriorityOptions = Map.ofEntries(
+            entry(0, "Utility first"),
+            entry(1, "Solar first"),
+            entry(2, "Solar + Utility"),
+            entry(3, "Only solar charging permitted if battery voltage not too low")
+    );
+
     @Override
     public List<Field> getFields() {
         return List.of(
@@ -52,14 +59,7 @@ public class Qpiri extends ArrayResponseCommand {
                                 entry(2, "SBU")
                         ))
                 ),
-                new Field<>("Charger source priority", s -> mapIntCodes(s,
-                        Map.ofEntries(
-                                entry(0, "Utility first"),
-                                entry(1, "Solar first"),
-                                entry(2, "Solar + Utility"),
-                                entry(3, "Only solar charging permitted if battery voltage not too low")
-                        ))
-                ),
+                new Field<>("Charger source priority", s -> mapIntCodes(s, chargerPriorityOptions), chargerPriorityOptions),
                 new Field<>("Parallel max number", Integer::valueOf),
                 new Field<>("Machine type", s -> mapIntCodes(s,
                         Map.ofEntries(

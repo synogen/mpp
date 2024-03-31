@@ -18,6 +18,7 @@ public class MqttUtil {
                 case NUMBER: yield new HomeAssistantMqttNumber(field.description(), topicPrefix, deviceName);
                 case BINARY: yield new HomeAssistantMqttBinary(field.description(), topicPrefix, deviceName);
                 case MULTIFLAG: mqttEntityList.putAll(getHaMqttEntities(field.subfields(), topicPrefix, deviceName)); yield null;
+                case SELECT: yield new HomeAssistantMqttSelect(field.description(), topicPrefix, deviceName, field.options());
                 default: yield new HomeAssistantMqttSensor(field.description(), topicPrefix, deviceName);
             };
             if (haMqtt != null) mqttEntityList.put(field.description(), haMqtt);
