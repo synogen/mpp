@@ -86,11 +86,11 @@ public class MqttMain {
         mqttEntity.setCommandHandler(WriteCommandHandlers::psdcCommandHandler);
         commandablePercentageConfig(mqttEntity.getConfig());
 
-//        mqttEntityList.get("Output source priority").setCommandHandler(WriteCommandHandlers::popCommandHandler);
+        mqttEntityList.get("Output source priority").setCommandHandler(WriteCommandHandlers::popCommandHandler);
         mqttEntityList.get("Charger source priority").setCommandHandler(WriteCommandHandlers::pcpCommandHandler);
 
         // MQTT subscriptions and handling
-        mqqtSubscriptions(mqttSubscriber, mqttPublisher, mqttEntityList, serialHandler);
+        mqttSubscriptions(mqttSubscriber, mqttPublisher, mqttEntityList, serialHandler);
 
         // HA MQTT discovery configurations on program start
         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
@@ -170,7 +170,7 @@ public class MqttMain {
         return properties;
     }
 
-    private static void mqqtSubscriptions(MqttClient mqttSubscriber, MqttClient mqttPublisher, HashMap<String, HomeAssistantMqttEntityBase> mqttEntityList, SerialHandler serialHandler) throws MqttException {
+    private static void mqttSubscriptions(MqttClient mqttSubscriber, MqttClient mqttPublisher, HashMap<String, HomeAssistantMqttEntityBase> mqttEntityList, SerialHandler serialHandler) throws MqttException {
         // subscriptions
         mqttSubscriber.subscribe(haStatusTopic, 0);
         for (var mqttEntity: mqttEntityList.values()) {

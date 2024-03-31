@@ -4,6 +4,7 @@ Right now this is just an incomplete testbed but the following works:
 - publishing QPIGS, QPIRI, QDOP and QMOD values
 - raw command receiver
 - setting battery trigger capacities via PBCC, PBDC and PSDC
+- setting output and charging source priorities
 
 See https://github.com/jblance/mpp-solar/tree/master/docs/protocols for different Voltronic protocols and commands
 

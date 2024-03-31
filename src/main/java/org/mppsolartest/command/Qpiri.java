@@ -14,6 +14,12 @@ public class Qpiri extends ArrayResponseCommand {
         return "QPIRI";
     }
 
+    private final Map<Integer, String> outputPriorityOptions = Map.ofEntries(
+            entry(0, "Utility first"),
+            entry(1, "Solar first"),
+            entry(2, "SBU")
+    );
+
     private final Map<Integer, String> chargerPriorityOptions = Map.ofEntries(
             entry(0, "Utility first"),
             entry(1, "Solar first"),
@@ -52,13 +58,7 @@ public class Qpiri extends ArrayResponseCommand {
                                 entry(1, "UPS")
                         ))
                 ),
-                new Field<>("Output source priority", s -> mapIntCodes(s,
-                        Map.ofEntries(
-                                entry(0, "Utility first"),
-                                entry(1, "Solar first"),
-                                entry(2, "SBU")
-                        ))
-                ),
+                new Field<>("Output source priority", s -> mapIntCodesToString(s, outputPriorityOptions), outputPriorityOptions),
                 new Field<>("Charger source priority", s -> mapIntCodesToString(s, chargerPriorityOptions), chargerPriorityOptions),
                 new Field<>("Parallel max number", Integer::valueOf),
                 new Field<>("Machine type", s -> mapIntCodes(s,

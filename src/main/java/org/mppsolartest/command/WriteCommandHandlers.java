@@ -27,17 +27,21 @@ public class WriteCommandHandlers {
     }
 
     public static void pcpCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommandWithCodeMapping("PCP", message, serialHandler, mqttClient, mqttEntity);
+    }
+
+    public static void popCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommandWithCodeMapping("POP", message, serialHandler, mqttClient, mqttEntity);
+    }
+
+    public static void setNumberCommandWithCodeMapping(String command, String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
         var options = mqttEntity.getOptions();
         for (var code: options.keySet()) {
             if (message.equalsIgnoreCase(options.get(code))) {
-                setNumberCommand("PCP", 2, code, serialHandler, mqttClient, mqttEntity);
+                setNumberCommand(command, 2, code, serialHandler, mqttClient, mqttEntity);
             }
         }
     }
-
-//    public static void popCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-//        setNumberCommand("POP", 2, message, serialHandler, mqttClient, mqttEntity);
-//    }
 
     private static void setNumberCommand(String command, Integer numberPaddedLength, String value, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws MqttException {
         var intValue = Integer.parseInt(value);
