@@ -57,6 +57,15 @@ public abstract class ArrayResponseCommand extends Command<HashMap<String, Objec
         }
     }
 
+    protected String mapIntCodesToString(String value, Map<Integer, String> map) {
+        var key = Integer.parseInt(value);
+        if (map.containsKey(key)) {
+            return map.get(key);
+        } else {
+            return "Unknown (" + value + ")";
+        }
+    }
+
     protected String toOnOff(String s) {
         return Objects.equals(s, "1") ? "ON" : "OFF";
     }

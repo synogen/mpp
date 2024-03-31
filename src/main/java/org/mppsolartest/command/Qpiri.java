@@ -59,7 +59,7 @@ public class Qpiri extends ArrayResponseCommand {
                                 entry(2, "SBU")
                         ))
                 ),
-                new Field<>("Charger source priority", s -> mapIntCodes(s, chargerPriorityOptions), chargerPriorityOptions),
+                new Field<>("Charger source priority", s -> mapIntCodesToString(s, chargerPriorityOptions), chargerPriorityOptions),
                 new Field<>("Parallel max number", Integer::valueOf),
                 new Field<>("Machine type", s -> mapIntCodes(s,
                         Map.ofEntries(
