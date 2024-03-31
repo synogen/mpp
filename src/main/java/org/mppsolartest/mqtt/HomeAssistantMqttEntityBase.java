@@ -4,11 +4,20 @@ import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.mppsolartest.serial.SerialHandler;
 
 public abstract class HomeAssistantMqttEntityBase {
-    abstract public String getConfigJson();
 
-    abstract public ConfigJson getConfig();
+    private ConfigJson configJson = new ConfigJson();
+    private String name;
 
     private String stateTopic;
+    private String commandTopic = "";
+
+    public String getConfigJson() {
+        return configJson.getJson();
+    }
+
+    public ConfigJson getConfig() {
+        return configJson;
+    }
 
     public String getStateTopic() {
         return stateTopic;
@@ -22,12 +31,17 @@ public abstract class HomeAssistantMqttEntityBase {
         return stateTopic + "/config";
     }
 
-    abstract public String getName();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
     public String getCommandTopic() {
         return commandTopic;
     }
 
-    private String commandTopic = "";
 
     protected CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler = (message, serialHandler, mqttClient, mqttEntityBase) -> {
         throw new RuntimeException(this.getClass() + " " + this.getName() + " has no command function");
