@@ -3,6 +3,8 @@ package org.mppsolartest.mqtt;
 import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.mppsolartest.serial.SerialHandler;
 
+import java.util.Map;
+
 public abstract class HomeAssistantMqttEntityBase {
 
     private ConfigJson configJson = new ConfigJson();
@@ -42,6 +44,10 @@ public abstract class HomeAssistantMqttEntityBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Map<Integer, String> getOptions() {
+        return null;
     }
 
     public String getName() {
