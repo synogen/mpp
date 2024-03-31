@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Log {
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS O")
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS O")
             .withZone(ZoneId.systemDefault());
     public static boolean showLogCaller = false;
     public static void log(String logMessage) {

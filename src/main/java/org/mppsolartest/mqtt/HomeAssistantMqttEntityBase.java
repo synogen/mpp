@@ -7,7 +7,7 @@ import java.util.Map;
 
 public abstract class HomeAssistantMqttEntityBase {
 
-    private ConfigJson configJson = new ConfigJson();
+    private final ConfigJson configJson = new ConfigJson();
     private String name;
 
     private String stateTopic;

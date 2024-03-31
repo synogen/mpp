@@ -9,7 +9,7 @@ import org.mppsolartest.serial.SerialHandler;
 
 public class WriteCommandHandlers {
     public static void rawCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-        var response = serialHandler.excuteSimpleCommand(message.toString());
+        var response = serialHandler.excuteSimpleCommand(message);
         if (response.isEmpty()) response = "Empty response received, check serial configuration";
         mqttClient.publish(mqttEntity.getStateTopic(), new MqttMessage(response.getBytes()));
     }

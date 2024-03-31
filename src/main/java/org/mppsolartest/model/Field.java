@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class Field<T> {
 
-    private String description;
+    private final String description;
     private Function<String, T> converter;
     private List<Field> subfields = new ArrayList<>();
     private HAType haType = HAType.SENSOR;

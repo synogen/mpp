@@ -27,8 +27,8 @@ import static org.mppsolartest.Log.log;
 
 public class MqttMain {
 
-    private static boolean remoteDebugWait = false;
-    private static String haStatusTopic = "homeassistant/status";
+    private static final boolean remoteDebugWait = false;
+    private static final String haStatusTopic = "homeassistant/status";
 
     public static void main(String[] args) throws Exception {
         // remote debug wait

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class ConfigJson {
 
-    private List<String> entries = new ArrayList<>();
+    private final List<String> entries = new ArrayList<>();
 
     public void addEntry(String entry) {
         entries.add(entry);
