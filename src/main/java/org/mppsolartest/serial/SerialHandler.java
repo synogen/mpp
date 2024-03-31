@@ -13,12 +13,12 @@ public class SerialHandler {
     private final InputStream input;
     private final OutputStream output;
     private final SerialPort serialPort;
-    private int errorcount = 0;
+    private int errorCount = 0;
 
-    private void clearbuffer() {
+    private void clearBuffer() {
         try {
-            for(int buflen = this.input.available(); buflen > 0; --buflen) {
-                this.input.read();
+            for(var buflen = input.available(); buflen > 0; --buflen) {
+                input.read();
             }
         } catch (Exception e) {
             Log.logException(e);
@@ -36,29 +36,29 @@ public class SerialHandler {
     }
 
     public boolean isOpen() {
-        return this.serialPort.isOpen();
+        return serialPort.isOpen();
     }
     public synchronized String excuteSimpleCommand(String command) {
         log("[Serial] Query: " + command);
-        boolean result = true;
-        String returnValue = "";
+        var result = true;
+        var returnValue = "";
 
         try {
-            for(int time = 0; (returnValue.length() == 0 || returnValue.startsWith("(NAK")) && time < 3; ++time) {
-                this.clearbuffer();
-                byte[] crc = CRCUtil.getCRCByte(command);
-                byte[] bytes = command.getBytes();
-                this.output.write(bytes);
-                this.output.write(crc);
-                this.output.write(13);
-                this.output.flush();
-                long end = System.currentTimeMillis() + 3000L;
-                StringBuilder sb = new StringBuilder();
-                boolean linebreak = false;
+            for(var time = 0; (returnValue.length() == 0 || returnValue.startsWith("(NAK")) && time < 3; ++time) {
+                clearBuffer();
+                var crc = CRCUtil.getCRCByte(command);
+                var bytes = command.getBytes();
+                output.write(bytes);
+                output.write(crc);
+                output.write(13);
+                output.flush();
+                var timeout = System.currentTimeMillis() + 3000L;
+                var sb = new StringBuilder();
+                var linebreak = false;
 
-                while(System.currentTimeMillis() < end) {
+                while(System.currentTimeMillis() < timeout) {
                     int ch;
-                    if ((ch = this.input.read()) >= 0) {
+                    if ((ch = input.read()) >= 0) {
                         if (ch == 13) {
                             linebreak = true;
                             break;
@@ -79,109 +79,42 @@ public class SerialHandler {
                     returnValue = "";
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             result = false;
         } finally {
-            this.countErrorandNotifyProcesser(result);
+            countErrorAndLog(result);
         }
         log("[Serial] Response: " + returnValue);
         return returnValue;
     }
 
-    public synchronized String excuteCommand(String command, boolean isResponse) {
-        boolean result = true;
-        String returnValue = "";
+    private void countErrorAndLog(boolean success) {
+        errorCount = success? 0 : errorCount + 1;
 
-        try {
-            for(int time = 0; (returnValue == null || returnValue.length() == 0 || returnValue.startsWith("(NAK")) && time < 3; ++time) {
-                this.clearbuffer();
-                byte[] crc = CRCUtil.getCRCByte(command);
-                byte[] bytes = command.getBytes();
-                this.output.write(bytes);
-                this.output.write(crc);
-                this.output.write(13);
-                this.output.flush();
-                if (!isResponse) {
-                    returnValue = null;
-                    break;
-                }
-
-                long end = System.currentTimeMillis() + 10000L;
-                StringBuilder sb = new StringBuilder();
-                boolean linebreak = false;
-
-                while(System.currentTimeMillis() < end) {
-                    int ch;
-                    if ((ch = this.input.read()) >= 0) {
-                        if (ch == 13) {
-                            linebreak = true;
-                            break;
-                        }
-
-                        sb.append((char)ch);
-                    }
-                }
-
-                if (!linebreak) {
-                    if (command.indexOf("P") == 0) {
-                        Log.log("4567890::" + returnValue);
-                    }
-
-                    result = false;
-                }
-
-                returnValue = sb.toString();
-                if (returnValue != null && returnValue.length() > 0) {
-                    if (CRCUtil.checkCRC(returnValue)) {
-                        returnValue = returnValue.substring(0, returnValue.length() - 2);
-                    } else {
-                        returnValue = "";
-                    }
-                }
-            }
-        } catch (Exception e) {
-            result = false;
-        } finally {
-            this.countErrorandNotifyProcesser(result);
+        if (errorCount >= 12) {
+            Log.log("[Serial] Communication failed " + errorCount + " times");
         }
-
-        return returnValue;
-    }
-
-    private void countErrorandNotifyProcesser(boolean success) {
-        if (success) {
-            this.errorcount = 0;
-        } else {
-            ++this.errorcount;
-        }
-
-        if (this.errorcount >= 12) {
-            Log.log("---------communication exception---------" + this.errorcount);
-        }
-
     }
 
     public void close() {
-        if (this.input != null) {
+        if (input != null) {
             try {
-                this.input.close();
+                input.close();
             } catch (IOException ignored) {}
         }
 
-        if (this.output != null) {
+        if (output != null) {
             try {
-                this.output.close();
+                output.close();
             } catch (IOException ignored) {}
         }
 
-        if (this.serialPort != null) {
-            try {
-                this.serialPort.closePort();
-            } catch (Exception ignored) {}
+        if (serialPort != null) {
+            serialPort.closePort();
         }
     }
 
     public String getSystemPortName() {
-        return this.serialPort.getSystemPortName();
+        return serialPort.getSystemPortName();
     }
 }
