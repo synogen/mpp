@@ -11,10 +11,13 @@ import java.util.Properties;
 import static spark.Spark.get;
 import static spark.Spark.port;
 
+/**
+ * REST API example
+ */
 public class ApiTest {
     public static void main(String[] args) throws Exception {
         var config = new Properties();
-        config.load(new FileReader("api.properties"));
+        config.load(new FileReader("serial.properties"));
         var port = SerialPort.getCommPort(config.getProperty("port"));
         port.setBaudRate(2400);
         if (port.openPort()) {

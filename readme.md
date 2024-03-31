@@ -1,6 +1,6 @@
 ## General
-Reads data from a Voltronic/MPPSolar inverter and publishes it to MQTT with Home Assistant discovery.
-Right now this is just an incomplete testbed but the following works:
+Reads data from a Voltronic/MPPSolar inverter and publishes it to MQTT. Supports Home Assistant MQTT auto discovery.
+Right now this is still incomplete but the following works:
 - publishing QPIGS, QPIRI, QDOP and QMOD values
 - raw command receiver
 - setting battery trigger capacities via PBCC, PBDC and PSDC

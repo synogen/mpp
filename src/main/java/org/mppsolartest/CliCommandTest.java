@@ -6,6 +6,9 @@ import org.mppsolartest.serial.SerialHandler;
 
 import java.util.Scanner;
 
+/**
+ * For testing raw commands
+ */
 public class CliCommandTest {
     public static void main(String[] args) throws Exception {
         // configure com port
