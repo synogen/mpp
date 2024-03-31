@@ -11,6 +11,15 @@ public abstract class HomeAssistantMqttEntityBase {
     private String stateTopic;
     private String commandTopic = "";
 
+    public HomeAssistantMqttEntityBase(String name, String topicPrefix, String deviceName, String type) {
+        var uniqueId = createUniqueId(deviceName, name);
+
+        this.setStateTopic(createStateTopic(topicPrefix, type, uniqueId));
+        this.setName(name);
+
+        getConfig().baseConfig(getName(), getStateTopic(), uniqueId, deviceName);
+    }
+
     public String getConfigJson() {
         return configJson.getJson();
     }
@@ -56,6 +65,14 @@ public abstract class HomeAssistantMqttEntityBase {
         // automatically set default command topic if a command handler is set
         getConfig().commandTopic(getStateTopic() + "/set");
         commandTopic = getStateTopic() + "/set";
+    }
+
+    public String createUniqueId(String deviceName, String name) {
+        return (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
+    }
+
+    public String createStateTopic(String topicPrefix, String type, String uniqueId) {
+        return (topicPrefix.length() > 0 ? topicPrefix + "/" : "") + type + "/" + uniqueId;
     }
 
 }
