@@ -21,7 +21,7 @@ public class SerialHandler {
                 this.input.read();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.logException(e);
         }
 
     }

@@ -19,6 +19,8 @@ public class CommandTest {
 
         System.out.println(new HomeAssistantMqttText("name", "hatest", "gew5048").getConfigJson());
 
+        Log.logException(new UnsupportedOperationException("går inte"));
+
         System.out.println("Test");
 
 

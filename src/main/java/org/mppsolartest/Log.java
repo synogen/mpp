@@ -23,4 +23,14 @@ public class Log {
 
         System.out.println(logElements.stream().collect(Collectors.joining(" ")));
     }
+
+    public static void logException(Exception exception) {
+        var logElements = new ArrayList<String>();
+
+        logElements.add(formatter.format(Instant.now()));
+        logElements.add("Exception: " + exception.getMessage());
+
+        System.out.println(logElements.stream().collect(Collectors.joining(" ")));
+        exception.printStackTrace();
+    }
 }
