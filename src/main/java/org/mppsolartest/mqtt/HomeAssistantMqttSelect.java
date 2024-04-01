@@ -1,18 +1,18 @@
 package org.mppsolartest.mqtt;
 
+import org.mppsolartest.model.Field;
+
 import java.util.Map;
 
 public class HomeAssistantMqttSelect extends HomeAssistantMqttEntityBase {
 
-    private final Map<Integer, String> options;
-    public HomeAssistantMqttSelect(String name, String topicPrefix, String deviceName, Map<Integer, String> options) {
-        super(name, topicPrefix, deviceName, "select");
-        getConfig().options(options.values());
-        this.options = options;
+    public HomeAssistantMqttSelect(Field field, String topicPrefix, String deviceName) {
+        super(field, topicPrefix, deviceName, "select");
+        getConfig().options(getField().options().values());
     }
 
     @Override
     public Map<Integer, String> getOptions() {
-        return options;
+        return getField().options();
     }
 }

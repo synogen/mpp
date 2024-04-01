@@ -23,9 +23,9 @@ public class Qdop extends ArrayResponseCommand {
                 new Field<>("Unknown 6", BigDecimal::new),
                 new Field<>("Unknown 7", Integer::valueOf),
                 new Field<>("Unknown 8", Integer::valueOf),
-                new Field<>("Battery back to grid capacity", Integer::valueOf, HAType.NUMBER),
-                new Field<>("Battery back to discharge capacity", Integer::valueOf, HAType.NUMBER),
-                new Field<>("Battery cut-off capacity", Integer::valueOf, HAType.NUMBER),
+                new Field<>("Battery back to grid capacity", Integer::valueOf, HAType.NUMBER, WriteCommandHandlers::pbccCommandHandler),
+                new Field<>("Battery back to discharge capacity", Integer::valueOf, HAType.NUMBER, WriteCommandHandlers::pbdcCommandHandler),
+                new Field<>("Battery cut-off capacity", Integer::valueOf, HAType.NUMBER, WriteCommandHandlers::psdcCommandHandler),
                 new Field<>("Unknown 12", Integer::valueOf),
                 new Field<>("Unknown 13", Integer::valueOf),
                 new Field<>("Unknown 14", Integer::valueOf)

@@ -58,8 +58,8 @@ public class Qpiri extends ArrayResponseCommand {
                                 entry(1, "UPS")
                         ))
                 ),
-                new Field<>("Output source priority", s -> mapIntCodesToString(s, outputPriorityOptions), outputPriorityOptions),
-                new Field<>("Charger source priority", s -> mapIntCodesToString(s, chargerPriorityOptions), chargerPriorityOptions),
+                new Field<>("Output source priority", s -> mapIntCodesToString(s, outputPriorityOptions), outputPriorityOptions, WriteCommandHandlers::popCommandHandler),
+                new Field<>("Charger source priority", s -> mapIntCodesToString(s, chargerPriorityOptions), chargerPriorityOptions, WriteCommandHandlers::pcpCommandHandler),
                 new Field<>("Parallel max number", Integer::valueOf),
                 new Field<>("Machine type", s -> mapIntCodes(s,
                         Map.ofEntries(

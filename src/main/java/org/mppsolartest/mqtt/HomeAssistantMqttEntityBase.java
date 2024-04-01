@@ -1,6 +1,7 @@
 package org.mppsolartest.mqtt;
 
 import org.eclipse.paho.mqttv5.client.MqttClient;
+import org.mppsolartest.model.Field;
 import org.mppsolartest.serial.SerialHandler;
 
 import java.util.Map;
@@ -8,18 +9,24 @@ import java.util.Map;
 public abstract class HomeAssistantMqttEntityBase {
 
     private final ConfigJson configJson = new ConfigJson();
-    private String name;
 
+    private Field field;
     private String stateTopic;
     private String commandTopic = "";
 
-    public HomeAssistantMqttEntityBase(String name, String topicPrefix, String deviceName, String type) {
-        var uniqueId = createUniqueId(deviceName, name);
+    public HomeAssistantMqttEntityBase(Field field, String topicPrefix, String deviceName, String type) {
+        this.field = field;
 
+        var uniqueId = createUniqueId(deviceName, getName());
         this.setStateTopic(createStateTopic(topicPrefix, type, uniqueId));
-        this.setName(name);
 
         getConfig().baseConfig(getName(), getStateTopic(), uniqueId, deviceName);
+
+        if (field.commandHandler() != null) {
+            // automatically set default command topic if a command handler is set
+            commandTopic = getStateTopic() + "/set";
+            getConfig().commandTopic(commandTopic);
+        }
     }
 
     public String getConfigJson() {
@@ -42,35 +49,27 @@ public abstract class HomeAssistantMqttEntityBase {
         return stateTopic + "/config";
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Map<Integer, String> getOptions() {
         return null;
     }
 
     public String getName() {
-        return name;
+        return field.description();
     }
     public String getCommandTopic() {
         return commandTopic;
     }
 
+    public Field getField() {
+        return field;
+    }
 
-    protected CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler = (message, serialHandler, mqttClient, mqttEntityBase) -> {
+    private CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> defaultCommandHandler = (message, serialHandler, mqttClient, mqttEntityBase) -> {
         throw new RuntimeException(this.getClass() + " " + this.getName() + " has no command function");
     };
 
     public CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> getCommandHandler() {
-        return commandHandler;
-    }
-
-    public void setCommandHandler(CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler) {
-        this.commandHandler = commandHandler;
-        // automatically set default command topic if a command handler is set
-        getConfig().commandTopic(getStateTopic() + "/set");
-        commandTopic = getStateTopic() + "/set";
+        return field.commandHandler() != null? field.commandHandler() : defaultCommandHandler;
     }
 
     public String createUniqueId(String deviceName, String name) {
