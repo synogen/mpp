@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Qmod extends ArrayResponseCommand {
+public class Qmod extends MapResponseCommand {
     @Override
     public String getCommand() {
         return "QMOD";

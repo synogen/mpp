@@ -18,8 +18,12 @@ public class Field<T> {
     private List<Field> subfields = new ArrayList<>();
     private HAType haType = HAType.SENSOR;
 
-    private Map options;
+    private Map optionsMap;
     private CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler;
+
+    private Function<SerialHandler, List> inverterOptionListQuery;
+
+
 
     public Field(String description, Function<String, T> converter) {
         this.description = description;
@@ -38,6 +42,14 @@ public class Field<T> {
         this.commandHandler = commandHandler;
     }
 
+    public Field(String description, Function<String, T> converter, CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler, Function<SerialHandler, List> inverterOptionListQuery) {
+        this.description = description;
+        this.converter = converter;
+        this.commandHandler = commandHandler;
+        this.inverterOptionListQuery = inverterOptionListQuery;
+        this.haType = HAType.SELECT;
+    }
+
     public Field(String description, Function<String, T> converter, HAType haType, CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler) {
         this.description = description;
         this.converter = converter;
@@ -45,10 +57,10 @@ public class Field<T> {
         this.commandHandler = commandHandler;
     }
 
-    public Field(String description, Function<String, T> converter, Map<Integer, String> options, CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler) {
+    public Field(String description, Function<String, T> converter, Map<Integer, String> optionsMap, CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler) {
         this.description = description;
         this.converter = converter;
-        this.options = options;
+        this.optionsMap = optionsMap;
         this.commandHandler = commandHandler;
         this.haType = HAType.SELECT;
     }
@@ -75,11 +87,15 @@ public class Field<T> {
         return haType;
     }
 
-    public Map options() {
-        return options;
+    public Map optionsMap() {
+        return optionsMap;
     }
 
     public CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler() {
         return commandHandler;
+    }
+
+    public Function<SerialHandler, List> inverterOptionListQuery() {
+        return inverterOptionListQuery;
     }
 }

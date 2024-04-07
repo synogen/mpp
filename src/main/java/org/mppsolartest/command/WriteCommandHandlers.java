@@ -34,6 +34,14 @@ public class WriteCommandHandlers {
         setNumberCommandWithCodeMapping("POP", message, serialHandler, mqttClient, mqttEntity);
     }
 
+    public static void muchgcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommand("MUCHGC", 3, message, serialHandler, mqttClient, mqttEntity);
+    }
+
+    public static void mnchgcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
+        setNumberCommand("MNCHGC", 3, message, serialHandler, mqttClient, mqttEntity);
+    }
+
     public static void setNumberCommandWithCodeMapping(String command, String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
         var options = mqttEntity.getOptions();
         for (var code: options.keySet()) {

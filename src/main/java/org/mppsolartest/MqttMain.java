@@ -65,7 +65,7 @@ public class MqttMain {
         var qmod = new Qmod();
 
         var fields = queryFields(qpigs, qpiri, qdop, qmod);
-        var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName);
+        var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName, serialHandler);
 
         // add command MQTT entity for receiving raw commands
         var rawCommandField = new Field<>("Raw Command Receiver", s -> s, WriteCommandHandlers::rawCommandHandler);
@@ -119,7 +119,7 @@ public class MqttMain {
         }
     }
 
-    private static ArrayList<Field> queryFields(ArrayResponseCommand ...commands) {
+    private static ArrayList<Field> queryFields(MapResponseCommand ...commands) {
         var fields = new ArrayList<Field>();
         Arrays.stream(commands).forEach(command -> fields.addAll(command.getFields()));
         return fields;

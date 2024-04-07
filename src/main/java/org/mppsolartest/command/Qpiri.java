@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Qpiri extends ArrayResponseCommand {
+public class Qpiri extends MapResponseCommand {
     @Override
     public String getCommand() {
         return "QPIRI";
@@ -50,8 +50,8 @@ public class Qpiri extends ArrayResponseCommand {
                                 entry(9, "LIC-protocol compatible battery")
                         ))
                 ),
-                new Field<>("Current max AC charging current in A", Integer::valueOf),
-                new Field<>("Current max charging current in A", Integer::valueOf),
+                new Field<>("Current max AC charging current in A", Integer::valueOf, WriteCommandHandlers::muchgcCommandHandler, serialHandler -> new Qmuchgcr().run(serialHandler)),
+                new Field<>("Current max charging current in A", Integer::valueOf, WriteCommandHandlers::mnchgcCommandHandler, serialHandler -> new Qmchgcr().run(serialHandler)),
                 new Field<>("Input voltage range", s -> mapIntCodes(s,
                         Map.ofEntries(
                                 entry(0, "Appliance"),

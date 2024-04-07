@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class ArrayResponseCommand extends Command<HashMap<String, Object>> {
+public abstract class MapResponseCommand extends Command<HashMap<String, Object>> {
 
     public abstract List<Field> getFields();
     @Override

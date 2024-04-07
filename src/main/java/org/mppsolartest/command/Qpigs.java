@@ -6,7 +6,7 @@ import org.mppsolartest.mqtt.HAType;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Qpigs extends ArrayResponseCommand {
+public class Qpigs extends MapResponseCommand {
     @Override
     public String getCommand() {
         return "QPIGS";
