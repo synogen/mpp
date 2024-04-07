@@ -5,6 +5,7 @@ Right now this is still incomplete but the following works:
 - raw command receiver
 - setting battery trigger capacities via PBCC, PBDC and PSDC
 - setting output and charging source priorities
+- setting maximum charging current
 
 See https://github.com/jblance/mpp-solar/tree/master/docs/protocols for different Voltronic protocols and commands
 
