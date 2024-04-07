@@ -8,12 +8,12 @@ public class CRCUtil {
         if (resultValue.length() <= 2) {
             return false;
         } else {
-            String firstValue = resultValue.substring(0, resultValue.length() - 2);
-            String lastValue = resultValue.substring(resultValue.length() - 2);
-            byte[] pByte = firstValue.getBytes();
-            int returnV = caluCRC(pByte);
-            String lastV = toHexString(lastValue);
-            int reV = Integer.parseInt(lastV, 16);
+            var firstValue = resultValue.substring(0, resultValue.length() - 2);
+            var lastValue = resultValue.substring(resultValue.length() - 2);
+            var pByte = firstValue.getBytes();
+            var returnV = calculateCRC(pByte);
+            var lastV = toHexString(lastValue);
+            var reV = Integer.parseInt(lastV, 16);
             result = reV == returnV;
 
             return result;
@@ -21,40 +21,33 @@ public class CRCUtil {
     }
 
     public static byte[] getCRCByte(String command) {
-        int crcint = caluCRC(command.getBytes());
-        int crclow = crcint & 255;
-        int crchigh = crcint >> 8 & 255;
+        var crcint = calculateCRC(command.getBytes());
+        var crclow = crcint & 255;
+        var crchigh = crcint >> 8 & 255;
         return new byte[]{(byte)crchigh, (byte)crclow};
     }
 
-    public static String getCRC(String command) {
-        int crcint = caluCRC(command.getBytes());
-        int crclow = crcint & 255;
-        int crchigh = crcint >> 8 & 255;
-        return new String(new byte[]{(byte)crchigh, (byte)crclow});
-    }
-
     public static String toHexString(String s) {
-        String str = "";
+        StringBuilder result = new StringBuilder();
 
         for(int i = 0; i < s.length(); ++i) {
-            short ch = (short)s.charAt(i);
+            var ch = (short)s.charAt(i);
             if (ch < 0) {
                 ch = (short)(ch + 256);
             }
 
-            String s4 = Integer.toHexString(ch);
-            if (s4.length() < 2) {
-                s4 = "0" + s4;
+            var chString = Integer.toHexString(ch);
+            if (chString.length() < 2) {
+                chString = "0" + chString;
             }
 
-            str = str + s4;
+            result.append(chString);
         }
 
-        return str;
+        return result.toString();
     }
 
-    private static int caluCRC(byte[] pByte) {
+    private static int calculateCRC(byte[] pByte) {
         try {
             int len = pByte.length;
             int i = 0;
@@ -83,44 +76,10 @@ public class CRCUtil {
             crc = (255 & bCRCHign) << 8;
             crc += bCRCLow;
             return crc;
-        } catch (Exception var8) {
-            var8.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return 0;
         }
     }
 
-    private static int caluCRC(short[] pByte) {
-        try {
-            int len = pByte.length;
-            int i = 0;
-
-            int crc;
-            for(crc = 0; len-- != 0; ++i) {
-                int da = 255 & (255 & crc >> 8) >> 4;
-                crc <<= 4;
-                crc ^= crc_tb[255 & (da ^ pByte[i] >> 4)];
-                da = 255 & (255 & crc >> 8) >> 4;
-                crc <<= 4;
-                int temp = 255 & (da ^ pByte[i] & 15);
-                crc ^= crc_tb[temp];
-            }
-
-            int bCRCLow = 255 & crc;
-            int bCRCHign = 255 & crc >> 8;
-            if (bCRCLow == 40 || bCRCLow == 13 || bCRCLow == 10) {
-                ++bCRCLow;
-            }
-
-            if (bCRCHign == 40 || bCRCHign == 13 || bCRCHign == 10) {
-                ++bCRCHign;
-            }
-
-            crc = (255 & bCRCHign) << 8;
-            crc += bCRCLow;
-            return crc;
-        } catch (Exception var8) {
-            var8.printStackTrace();
-            return 0;
-        }
-    }
 }

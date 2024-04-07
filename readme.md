@@ -36,4 +36,4 @@ Requirements:
 HA should then automatically pick up the different published entities through its MQTT integration.
 
 ## TODO
-- implement commands from inverter protocol manual
+- implement more commands from inverter protocol manual

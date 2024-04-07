@@ -58,7 +58,7 @@ public class MqttMain {
         // open serial port
         var serialHandler = new SerialHandler(SerialPort.getCommPort(serialPort));
 
-        // get MQTT entities for inverter commands
+        // get MQTT entities for all inverter commands that will be run repeatedly with a certain interval
         var qpigs = new Qpigs();
         var qpiri = new Qpiri();
         var qdop = new Qdop();
