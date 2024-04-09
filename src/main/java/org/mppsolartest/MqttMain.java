@@ -9,6 +9,7 @@ import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 import org.mppsolartest.command.*;
 import org.mppsolartest.model.Field;
 import org.mppsolartest.mqtt.HomeAssistantMqttEntityBase;
+import org.mppsolartest.mqtt.HomeAssistantMqttSensor;
 import org.mppsolartest.mqtt.HomeAssistantMqttText;
 import org.mppsolartest.mqtt.MqttUtil;
 import org.mppsolartest.serial.SerialHandler;
@@ -72,6 +73,10 @@ public class MqttMain {
         var commandEntity = new HomeAssistantMqttText(rawCommandField, topicPrefix, deviceName);
         mqttEntityList.put(commandEntity.getName(), commandEntity);
 
+        // MQTT entities for communicating program state to HA
+        var errorCountEntity = new HomeAssistantMqttSensor("Serial Error Count", topicPrefix, deviceName);
+        mqttEntityList.put(errorCountEntity.getName(), errorCountEntity);
+
         // MQTT subscriptions and handling
         mqttSubscriptions(mqttSubscriber, mqttPublisher, mqttEntityList, serialHandler);
 
@@ -90,18 +95,29 @@ public class MqttMain {
                     values.putAll(qpiri.run(serialHandler));
                     values.putAll(qdop.run(serialHandler));
                     values.putAll(qmod.run(serialHandler));
-                    if (values.keySet().isEmpty()) log("[Serial] No values received from serial port " + serialHandler.getSystemPortName() + ", check config!");
-                    // match values against corresponding MQTT entities and publish to MQTT
-                    var jsonMapper = new ObjectMapper();
-                    for (var valueKey: values.keySet()) {
-                        var value = values.get(valueKey);
-                        if (mqttEntityList.containsKey(valueKey)) {
-                            var haMqtt = mqttEntityList.get(valueKey);
-                            var valueString = value.getClass().isRecord()? jsonMapper.writeValueAsString(value) : value.toString();
-                            mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(valueString.getBytes()));
+                    if (values.keySet().isEmpty()) {
+                        log("[Serial] No values received from serial port " + serialHandler.getSystemPortName() + ", check config!");
+                    } else {
+                        // match values against corresponding MQTT entities and publish to MQTT
+                        var jsonMapper = new ObjectMapper();
+                        for (var valueKey: values.keySet()) {
+                            var value = values.get(valueKey);
+                            if (mqttEntityList.containsKey(valueKey)) {
+                                var haMqtt = mqttEntityList.get(valueKey);
+                                var valueString = value.getClass().isRecord()? jsonMapper.writeValueAsString(value) : value.toString();
+                                mqttPublisher.publish(haMqtt.getStateTopic(), new MqttMessage(valueString.getBytes()));
+                            }
                         }
+                        log("[MQTT] Published updates from inverter to MQTT");
                     }
-                    log("[MQTT] Published updates from inverter to MQTT");
+                    // send error count to HA
+                    mqttPublisher.publish(errorCountEntity.getStateTopic(), new MqttMessage(String.valueOf(serialHandler.errorCount()).getBytes()));
+
+                    // retry serial connection on too many failures
+                    if (serialHandler.errorCount() > 20) {
+                        log("[Serial] Failed communicating for " + serialHandler.errorCount() + " times, attempting to re-initialize serial device");
+                        serialHandler.reinit();
+                    }
                 } else {
                     // TODO send unavailable status to availability topic?
                 }

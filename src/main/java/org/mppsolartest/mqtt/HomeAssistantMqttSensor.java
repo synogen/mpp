@@ -4,6 +4,10 @@ import org.mppsolartest.model.Field;
 
 public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
 
+    public HomeAssistantMqttSensor(String name, String topicPrefix, String deviceName) {
+        super(name, topicPrefix, deviceName, "sensor");
+    }
+
     public HomeAssistantMqttSensor(Field field, String topicPrefix, String deviceName) {
         super(field, topicPrefix, deviceName, "sensor");
 

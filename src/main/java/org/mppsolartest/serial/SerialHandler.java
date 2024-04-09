@@ -10,8 +10,8 @@ import java.io.OutputStream;
 import static org.mppsolartest.Log.log;
 
 public class SerialHandler {
-    private final InputStream input;
-    private final OutputStream output;
+    private InputStream input;
+    private OutputStream output;
     private final SerialPort serialPort;
     private int errorCount = 0;
 
@@ -116,5 +116,16 @@ public class SerialHandler {
 
     public String getSystemPortName() {
         return serialPort.getSystemPortName();
+    }
+
+    public int errorCount() {
+        return errorCount;
+    }
+
+    public void reinit() {
+        this.close();
+        this.serialPort.openPort(500);
+        this.input = serialPort.getInputStream();
+        this.output = serialPort.getOutputStream();
     }
 }

@@ -14,8 +14,19 @@ public abstract class HomeAssistantMqttEntityBase {
     private String stateTopic;
     private String commandTopic = "";
 
+    private String name;
+
+    public HomeAssistantMqttEntityBase(String name, String topicPrefix, String deviceName, String type) {
+        this.name = name;
+        var uniqueId = createUniqueId(deviceName, name);
+        this.setStateTopic(createStateTopic(topicPrefix, type, uniqueId));
+
+        getConfig().baseConfig(getName(), getStateTopic(), uniqueId, deviceName);
+    }
+
     public HomeAssistantMqttEntityBase(Field field, String topicPrefix, String deviceName, String type) {
         this.field = field;
+        this.name = field.description();
 
         var uniqueId = createUniqueId(deviceName, getName());
         this.setStateTopic(createStateTopic(topicPrefix, type, uniqueId));
@@ -54,7 +65,7 @@ public abstract class HomeAssistantMqttEntityBase {
     }
 
     public String getName() {
-        return field.description();
+        return name;
     }
     public String getCommandTopic() {
         return commandTopic;
