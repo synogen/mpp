@@ -17,6 +17,7 @@ public class ConfigJson {
         return """
                 {
                     %s,
+                    "state_class": "measurement",
                     "origin": {
                         "name": "MQTT Java Test",
                         "sw_version": "testing",

@@ -16,6 +16,7 @@ Tested with a MPPSolar PIP5048GEW, an OrangePi Zero 2W and a CH340 USB to serial
 2. `mvn package`
 
 ## Docker
+(Check docker-build.sh if you want to build & docker build at the same time)
 Run build first. Then for running on a PI/ARM device:
 1. `docker build -t mpp-test-arm --platform linux/arm64 .` 
 2. `docker save mpp-test-arm -o mpp-test-arm.tar`
