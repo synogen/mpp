@@ -24,7 +24,8 @@ public class Qmod extends MapResponseCommand {
                                 entry("B", "Battery Mode "),
                                 entry("F", "Fault Mode"),
                                 entry("H", "Power Saving Mode")
-                        ))
+                        )),
+                        false
                 )
         );
     }

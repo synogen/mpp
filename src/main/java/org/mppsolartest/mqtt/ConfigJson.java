@@ -17,7 +17,6 @@ public class ConfigJson {
         return """
                 {
                     %s,
-                    "state_class": "measurement",
                     "origin": {
                         "name": "MQTT Java Test",
                         "sw_version": "testing",
@@ -76,6 +75,10 @@ public class ConfigJson {
 
     public void mode(String mode) {
         simpleString("mode", mode);
+    }
+
+    public void measurement() {
+        simpleString("state_class", "measurement");
     }
 
     public void options(Collection<String> options) {

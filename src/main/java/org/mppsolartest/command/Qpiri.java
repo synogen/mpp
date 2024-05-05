@@ -48,7 +48,7 @@ public class Qpiri extends MapResponseCommand {
                                 entry(1, "Flooded"),
                                 entry(2, "User"),
                                 entry(9, "LIC-protocol compatible battery")
-                        ))
+                        )), false
                 ),
                 new Field<>("Current max AC charging current in A", Integer::valueOf, WriteCommandHandlers::muchgcCommandHandler, serialHandler -> new Qmuchgcr().run(serialHandler)),
                 new Field<>("Current max charging current in A", Integer::valueOf, WriteCommandHandlers::mnchgcCommandHandler, serialHandler -> new Qmchgcr().run(serialHandler)),
@@ -56,7 +56,7 @@ public class Qpiri extends MapResponseCommand {
                         Map.ofEntries(
                                 entry(0, "Appliance"),
                                 entry(1, "UPS")
-                        ))
+                        )), false
                 ),
                 new Field<>("Output source priority", s -> mapIntCodesToString(s, outputPriorityOptions), outputPriorityOptions, WriteCommandHandlers::popCommandHandler),
                 new Field<>("Charger source priority", s -> mapIntCodesToString(s, chargerPriorityOptions), chargerPriorityOptions, WriteCommandHandlers::pcpCommandHandler),
@@ -66,13 +66,13 @@ public class Qpiri extends MapResponseCommand {
                                 entry(0, "Grid tie"),
                                 entry(1, "Offgrid"),
                                 entry(10, "Hybrid")
-                        ))
+                        )), false
                 ),
                 new Field<>("Topology", s -> mapIntCodes(s,
                         Map.ofEntries(
                                 entry(0, "Transformerless"),
                                 entry(1, "Transformer")
-                        ))
+                        )), false
                 ),
                 new Field<>("Output mode", s -> mapIntCodes(s,
                         Map.ofEntries(
@@ -83,20 +83,20 @@ public class Qpiri extends MapResponseCommand {
                                 entry(4, "Phase 3 of 3 Phase output"),
                                 entry(5, "parallel output(120°)"),
                                 entry(6, "parallel output(180°)")
-                        ))
+                        )), false
                 ),
                 new Field<>("Battery re-discharge voltage", BigDecimal::new),
                 new Field<>("PV OK condition for parallel", s -> mapIntCodes(s,
                         Map.ofEntries(
                                 entry(0, "As long as one unit of inverters has connect PV, parallel system will consider PV OK"),
                                 entry(1, "Only All of inverters have connect PV, parallel system will consider PV OK")
-                        ))
+                        )), false
                 ),
                 new Field<>("PV power balance", s -> mapIntCodes(s,
                         Map.ofEntries(
                                 entry(0, "PV input max current will be the max charged current"),
                                 entry(1, "PV input max power will be the sum of the max charged power and loads power")
-                        ))
+                        )), false
                 ),
                 new Field<>("Max. charging time at C.V stage", Integer::valueOf)
         );

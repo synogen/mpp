@@ -19,5 +19,6 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
         if (unit.isEmpty() && getName().toLowerCase().contains("percent")) unit = "%";
         if (!unit.isBlank()) getConfig().unit(unit);
 
+        if (field.measurement()) getConfig().measurement();
     }
 }

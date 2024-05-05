@@ -18,6 +18,7 @@ public class Field<T> {
     private List<Field> subfields = new ArrayList<>();
     private HAType haType = HAType.SENSOR;
 
+    private boolean measurement = false;
     private Map optionsMap;
     private CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler;
 
@@ -28,6 +29,12 @@ public class Field<T> {
     public Field(String description, Function<String, T> converter) {
         this.description = description;
         this.converter = converter;
+    }
+
+    public Field(String description, Function<String, T> converter, boolean measurement) {
+        this.description = description;
+        this.converter = converter;
+        this.measurement = measurement;
     }
 
     public Field(String description, Function<String, T> converter, HAType haType) {
@@ -97,5 +104,9 @@ public class Field<T> {
 
     public Function<SerialHandler, List> inverterOptionListQuery() {
         return inverterOptionListQuery;
+    }
+
+    public boolean measurement() {
+        return measurement;
     }
 }
