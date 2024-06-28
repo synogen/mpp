@@ -22,14 +22,14 @@ public abstract class MapResponseCommand extends Command<HashMap<String, Object>
                 var value = rParts[i];
                 if (field.subfields().isEmpty()) {
                     // no subfields, convert value directly
-                    var convertedValue = field.converter().apply(value);
+                    var convertedValue = field.convert(value);
                     result.put(field.description(), convertedValue);
                 } else {
                     // fields with multiple flags in one value generate subfields
                     if (field.subfields().size() == value.length()) {
                         for (int j = 0; j < value.length(); j++) {
                             var subfield = (Field)field.subfields().get(j);
-                            result.put(subfield.description(), subfield.converter().apply(value.substring(j, j+1)));
+                            result.put(subfield.description(), subfield.convert(value.substring(j, j+1)));
                         }
                     }
                 }

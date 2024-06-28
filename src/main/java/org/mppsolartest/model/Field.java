@@ -1,6 +1,7 @@
 package org.mppsolartest.model;
 
 import org.eclipse.paho.mqttv5.client.MqttClient;
+import org.mppsolartest.Log;
 import org.mppsolartest.mqtt.CommandFunction;
 import org.mppsolartest.mqtt.HAType;
 import org.mppsolartest.mqtt.HomeAssistantMqttEntityBase;
@@ -18,13 +19,15 @@ public class Field<T> {
     private List<Field> subfields = new ArrayList<>();
     private HAType haType = HAType.SENSOR;
 
-    private boolean measurement = false;
+    private boolean measurement = true;
+
+    private boolean ignoreOutliers = false;
     private Map optionsMap;
     private CommandFunction<String, SerialHandler, MqttClient, HomeAssistantMqttEntityBase> commandHandler;
 
     private Function<SerialHandler, List> inverterOptionListQuery;
 
-
+    private List<T> history = new ArrayList<>();
 
     public Field(String description, Function<String, T> converter) {
         this.description = description;
@@ -35,6 +38,13 @@ public class Field<T> {
         this.description = description;
         this.converter = converter;
         this.measurement = measurement;
+    }
+
+    public Field(String description, Function<String, T> converter, boolean measurement, boolean ignoreOutliers) {
+        this.description = description;
+        this.converter = converter;
+        this.measurement = measurement;
+        this.ignoreOutliers = ignoreOutliers;
     }
 
     public Field(String description, Function<String, T> converter, HAType haType) {
@@ -82,8 +92,30 @@ public class Field<T> {
         return description;
     }
 
-    public Function<String, T> converter() {
-        return converter;
+    public T convert(String value) {
+        var result = converter.apply(value);
+
+        if (ignoreOutliers && history.size() > 4) {
+            if (result instanceof Integer) {
+                Integer average = 0;
+                for (var h: history) {
+                    var hInteger = (Integer)h;
+                    average += hInteger;
+                }
+                average = average / history.size();
+                if (Math.abs((Integer)result - average) > 60) {
+                    Log.log("Ignored outlier for '" + this.description + "': " + result);
+                    return (T)average;
+                }
+            }
+        }
+        addHistory(result);
+        return result;
+    }
+
+    private void addHistory(T value) {
+        history.add(value);
+        if (history.size() > 10) history.removeFirst();
     }
 
     public List<Field> subfields() {

@@ -25,7 +25,7 @@ public class Qpigs extends MapResponseCommand {
                 new Field<>("BUS voltage", Integer::valueOf),
                 new Field<>("Battery voltage in V", BigDecimal::new),
                 new Field<>("Battery charging current in A", Integer::valueOf),
-                new Field<>("Battery capacity percentage", Integer::valueOf),
+                new Field<>("Battery capacity percentage", Integer::valueOf, true, true),
                 new Field<>("Inverter heat sink temperature in C°", Integer::valueOf),
                 new Field<>("PV Input current for battery in A", BigDecimal::new),
                 new Field<>("PV Input voltage", BigDecimal::new),
