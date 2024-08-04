@@ -116,7 +116,11 @@ public class MqttMain {
                     // retry serial connection on too many failures
                     if (serialHandler.errorCount() > 20) {
                         log("[Serial] Failed communicating for " + serialHandler.errorCount() + " times, attempting to re-initialize serial device");
-                        serialHandler.reinit();
+                        while (!serialHandler.reinit()) {
+                            log("[Serial] Re-initialization failed, delaying 5 seconds");
+                            Thread.sleep(5000);
+                        }
+                        log("[Serial] Re-initialization successful");
                     }
                 } else {
                     // TODO send unavailable status to availability topic?

@@ -122,10 +122,11 @@ public class SerialHandler {
         return errorCount;
     }
 
-    public void reinit() {
+    public boolean reinit() {
         this.close();
-        this.serialPort.openPort(500);
+        var result = this.serialPort.openPort(500);
         this.input = serialPort.getInputStream();
         this.output = serialPort.getOutputStream();
+        return result;
     }
 }
