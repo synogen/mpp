@@ -47,6 +47,10 @@ public class Qpiri extends MapResponseCommand {
                                 entry(0, "AGM"),
                                 entry(1, "Flooded"),
                                 entry(2, "User"),
+                                entry(3, "Pylon"),
+                                entry(5, "Weco"),
+                                entry(6, "Soltaro"),
+                                entry(8, "LIB-protocol compatible battery"),
                                 entry(9, "LIC-protocol compatible battery")
                         )), false
                 ),
@@ -98,7 +102,15 @@ public class Qpiri extends MapResponseCommand {
                                 entry(1, "PV input max power will be the sum of the max charged power and loads power")
                         )), false
                 ),
-                new Field<>("Max. charging time at C.V stage", Integer::valueOf)
+                new Field<>("Max. charging time at C.V stage", Integer::valueOf),
+                new Field<>("Operation Logic", s -> mapIntCodes(s,
+                        Map.ofEntries(
+                                entry(0, "Automatic"),
+                                entry(1, "On-line mode"),
+                                entry(2, "ECO mode")
+                        )), false
+                ),
+                new Field<>("Max discharging current", Integer::valueOf)
         );
     }
 }
