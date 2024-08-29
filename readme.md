@@ -26,7 +26,7 @@ Run build first. Then for running on a PI/ARM device:
 6. Copy `docker-compose.yml` to device and adapt devices section, first port should match your host port
 7. `docker-compose up` on device in the directory where docker-compose.yml is
 8. You should see the log with something like "Published MQTT discovery configurations for Home Assistant"
-9. If everything is alright quit the application with CTRL+C and run in daemon mode with `docker-compose -d` to keep it running
+9. If everything is alright quit the application with CTRL+C and run in daemon mode with `docker-compose up -d` to keep it running
 
 ## Home Assistant
 Requirements:
