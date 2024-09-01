@@ -61,11 +61,12 @@ public class MqttMain {
 
         // get MQTT entities for all inverter commands that will be run repeatedly with a certain interval
         var qpigs = new Qpigs();
+        var qpigs2 = new Qpigs2();
         var qpiri = new Qpiri();
         var qdop = new Qdop();
         var qmod = new Qmod();
 
-        var fields = queryFields(qpigs, qpiri, qdop, qmod);
+        var fields = queryFields(qpigs, qpigs2, qpiri, qdop, qmod);
         var mqttEntityList = MqttUtil.getHaMqttEntities(fields, topicPrefix, deviceName, serialHandler);
 
         // add command MQTT entity for receiving raw commands
@@ -92,6 +93,7 @@ public class MqttMain {
                 if (serialHandler.isOpen()) {
                     // run query commands and get values
                     var values = qpigs.run(serialHandler);
+                    values.putAll(qpigs2.run(serialHandler));
                     values.putAll(qpiri.run(serialHandler));
                     values.putAll(qdop.run(serialHandler));
                     values.putAll(qmod.run(serialHandler));
