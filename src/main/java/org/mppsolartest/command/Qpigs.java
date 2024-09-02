@@ -41,8 +41,8 @@ public class Qpigs extends MapResponseCommand {
                         new Field<>("Solar Charging on", this::toOnOff, HAType.BINARY),
                         new Field<>("AC Charging on", this::toOnOff, HAType.BINARY)
                 )),
-                new Field<>("Reserved", s -> s),
-                new Field<>("Reserved 2", s -> s),
+                new Field<>("Battery voltage offset for fans on", s -> s),
+                new Field<>("EEPROM version", s -> s),
                 new Field<>("PV Charging power in W", Integer::valueOf),
                 new Field<>("Status Flags 2", s -> s)
         );
