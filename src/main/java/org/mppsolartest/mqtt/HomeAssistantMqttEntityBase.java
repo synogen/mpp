@@ -84,7 +84,7 @@ public abstract class HomeAssistantMqttEntityBase {
     }
 
     public String createUniqueId(String deviceName, String name) {
-        return (deviceName.length() > 0? deviceName.toLowerCase().replaceAll(" ", "_") + "_" : "") + name.toLowerCase().replaceAll(" ", "_");
+        return (deviceName.length() > 0? deviceName.toLowerCase().replaceAll("\\W", "_") + "_" : "") + name.toLowerCase().replaceAll("\\W", "_");
     }
 
     public String createStateTopic(String topicPrefix, String type, String uniqueId) {

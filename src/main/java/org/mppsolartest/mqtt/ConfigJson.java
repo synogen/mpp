@@ -42,7 +42,7 @@ public class ConfigJson {
                     "identifiers": [
                         "%s"
                     ]
-                }""".formatted(name, name.toLowerCase().replaceAll(" ", "_")).replaceAll("\n", "\n\t"));
+                }""".formatted(name, name.toLowerCase().replaceAll("\\W", "_")).replaceAll("\n", "\n\t"));
     }
 
     public void uniqueId(String uniqueId) {
