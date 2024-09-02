@@ -17,7 +17,7 @@ public class CommandTest {
 
         var f = new Field<>("AC input voltage in V", BigDecimal::new);
 
-        System.out.println(new HomeAssistantMqttText("name", "hatest", "gew5048").getConfigJson());
+        System.out.println(new HomeAssistantMqttText(f, "hatest", "gew5048").getConfigJson());
 
         Log.logException(new UnsupportedOperationException("går inte"));
 
