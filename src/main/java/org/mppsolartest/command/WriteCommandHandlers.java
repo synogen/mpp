@@ -4,6 +4,7 @@ import org.eclipse.paho.mqttv5.client.MqttClient;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.eclipse.paho.mqttv5.common.MqttMessage;
 import org.mppsolartest.Log;
+import org.mppsolartest.MqttMain;
 import org.mppsolartest.mqtt.HomeAssistantMqttEntityBase;
 import org.mppsolartest.serial.SerialHandler;
 
@@ -35,7 +36,7 @@ public class WriteCommandHandlers {
     }
 
     public static void muchgcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {
-        setNumberCommand("MUCHGC", 3, message, serialHandler, mqttClient, mqttEntity);
+        setNumberCommand("MUCHGC", MqttMain.model.startsWith("MKS2")? 4 : 3, message, serialHandler, mqttClient, mqttEntity);
     }
 
     public static void mnchgcCommandHandler(String message, SerialHandler serialHandler, MqttClient mqttClient, HomeAssistantMqttEntityBase mqttEntity) throws Exception {

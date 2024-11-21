@@ -30,6 +30,8 @@ public class MqttMain {
     private static final boolean remoteDebugWait = false;
     private static final String haStatusTopic = "homeassistant/status";
 
+    public static String model;
+
     public static void main(String[] args) throws Exception {
         // remote debug wait
         if (remoteDebugWait) {
@@ -86,6 +88,8 @@ public class MqttMain {
         MqttUtil.publishConfigForHaMqttEntities(mqttEntityList, mqttPublisher);
         log("[MQTT] Published MQTT discovery configurations for Home Assistant");
 
+        // query inverter model
+        model = serialHandler.excuteSimpleCommand("QMN").substring(1);
 
         // serial query loop
         try {
