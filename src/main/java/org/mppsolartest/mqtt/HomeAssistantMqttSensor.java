@@ -15,7 +15,7 @@ public class HomeAssistantMqttSensor extends HomeAssistantMqttEntityBase {
         var nameParts = getName().split(" ");
         var unit = nameParts.length > 2 && nameParts[nameParts.length-2].equalsIgnoreCase("in")? nameParts[nameParts.length-1] : "";
         // unit fallbacks
-        if (unit.isEmpty() && getName().toLowerCase().contains("voltage")) unit = "V";
+        if (unit.isEmpty() && getName().toLowerCase().contains("voltage") && !getName().equalsIgnoreCase("Input voltage range")) unit = "V";
         if (unit.isEmpty() && getName().toLowerCase().contains("percent")) unit = "%";
         if (!unit.isBlank()) getConfig().unit(unit);
 
